@@ -11,6 +11,7 @@
             <web-resource-name>NoAccess</web-resource-name>
             <url-pattern>*.jsp</url-pattern>
         </web-resource-collection>
+        <!-- No one is allowed to directly access jsp-->
         <auth-constraint>
         </auth-constraint>
     </security-constraint>
