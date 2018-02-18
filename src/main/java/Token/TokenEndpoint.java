@@ -18,31 +18,28 @@ under the License.
 */
 package Token;
 
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class TokenFilter implements javax.servlet.Filter {
+@WebServlet(urlPatterns = "/Token")
+public class TokenEndpoint extends HttpServlet {
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final HttpServletRequest httpServletRequest = (HttpServletRequest) req;
+        final HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
 
-    }
+        final String code = httpServletRequest.getParameter("code");
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-
-        chain.doFilter(request, response);
-    }
-
-    @Override
-    public void destroy() {
-
+        final ServletOutputStream outputStream = httpServletResponse.getOutputStream();
+        if (code != null && code.equals("Ax10")) {
+            outputStream.print("Here is token : abc123");
+        } else {
+            outputStream.print("Invalid request");
+        }
     }
 }

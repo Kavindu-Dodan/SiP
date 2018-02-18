@@ -16,33 +16,27 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-package Token;
+package Login;
 
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class TokenFilter implements javax.servlet.Filter {
+@WebServlet(urlPatterns = "/Login")
+public class LoginEndpoint extends HttpServlet {
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-
-        chain.doFilter(request, response);
-    }
-
-    @Override
-    public void destroy() {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final ServletOutputStream outputStream = resp.getOutputStream();
+        outputStream.print("Code : Ax10");
 
     }
 }
