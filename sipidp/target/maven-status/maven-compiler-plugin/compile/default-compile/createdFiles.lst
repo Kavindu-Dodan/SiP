@@ -1,6 +1,0 @@
-Authorization\AuthorizationEndpoint.class
-Token\TokenEndpoint.class
-Authorization\AuthFilter.class
-Login\LoginEndpoint.class
-Authorization\AuthValidator.class
-Token\TokenFilter.class

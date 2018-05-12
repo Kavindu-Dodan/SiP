@@ -16,22 +16,28 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-package Authorization;
+package Control.Authorization;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
+import Common.Exceptions.FrameworkBaseException;
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-@WebServlet(urlPatterns = "/authorization", name = "AuthorizationEndpoint")
-public class AuthorizationEndpoint extends HttpServlet {
-   @Override
-   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-   }
+public class AuthRequestProcessor {
 
-   @Override
-   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-   }
+    private AuthRequestProcessor() {
+    }
+
+    public static boolean preValidations(final HttpServletRequest request) {
+        try {
+            AuthenticationRequest.parse(new URI(request.getRequestURI()), request.getQueryString());
+        } catch (ParseException | URISyntaxException e) {
+            throw new FrameworkBaseException("Failed to pass the Authorization request", e);`
+        }
+        return true;
+    }
 }

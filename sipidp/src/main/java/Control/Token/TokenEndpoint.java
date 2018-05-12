@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-package Login;
+package Control.Token;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -26,17 +26,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/Login")
-public class LoginEndpoint extends HttpServlet {
+@WebServlet(urlPatterns = "/Control")
+public class TokenEndpoint extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
-    }
+        final HttpServletRequest httpServletRequest = (HttpServletRequest) req;
+        final HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final ServletOutputStream outputStream = resp.getOutputStream();
-        outputStream.print("Code : Ax10");
+        final String code = httpServletRequest.getParameter("code");
 
+        final ServletOutputStream outputStream = httpServletResponse.getOutputStream();
+        if (code != null && code.equals("Ax10")) {
+            outputStream.print("Here is token : abc123");
+        } else {
+            outputStream.print("Invalid request");
+        }
     }
 }

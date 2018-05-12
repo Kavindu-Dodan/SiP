@@ -16,30 +16,22 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-package Token;
+package Control.Authorization;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/Token")
-public class TokenEndpoint extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final HttpServletRequest httpServletRequest = (HttpServletRequest) req;
-        final HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
+@WebServlet(urlPatterns = "/authorization", name = "AuthorizationEndpoint")
+public class AuthorizationEndpoint extends HttpServlet {
+   @Override
+   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+   }
 
-        final String code = httpServletRequest.getParameter("code");
-
-        final ServletOutputStream outputStream = httpServletResponse.getOutputStream();
-        if (code != null && code.equals("Ax10")) {
-            outputStream.print("Here is token : abc123");
-        } else {
-            outputStream.print("Invalid request");
-        }
-    }
+   @Override
+   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+   }
 }

@@ -18,8 +18,9 @@
         String message = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
     %>
 
-   Exception type : <%out.println(exceptionType);%> <br>
-   Error Code : <%out.println(message);%> <br>
+    Exception type : <%out.println(exceptionType);%> <br>
+    Error Code : <%out.println(message);%> <br>
+
 </p>
 </body>
 </html>

@@ -16,6 +16,14 @@
         <finalName>sip-identity-provider</finalName>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>5.61</version>
+        </dependency>
+    </dependencies>
+
     <profiles>
         <profile>
             <id>wfdeploy</id>
