@@ -19,6 +19,8 @@ under the License.
 package Control.Authorization;
 
 import Common.Exceptions.FrameworkBaseException;
+import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
+import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,11 +38,12 @@ public class AuthorizationEndpoint extends HttpServlet {
         }
 
         // Create the Authorization response
+        AuthenticationResponse authResponse = AuthRequestProcessor.getAuthResponse(req);
 
+        if (authResponse instanceof AuthenticationSuccessResponse) {
+            AuthenticationSuccessResponse successResponse = (AuthenticationSuccessResponse) authResponse;
+            resp.sendRedirect(successResponse.toURI().toASCIIString());
+        }
 
-    }
-
-    @Override
-    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
     }
 }

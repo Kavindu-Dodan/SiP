@@ -20,12 +20,17 @@ package Control.Authorization;
 
 import Common.Exceptions.FrameworkBaseException;
 import Common.Exceptions.FrameworkCheckedException;
+import Common.FwUtils;
 import Models.Client;
+import Models.OpenIDConnectObject;
+import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 import storage.IDPClients;
+import storage.TokenStorage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -55,7 +60,32 @@ public class AuthRequestProcessor {
         return client.getRedirectUrl().equals(authRequest.getRedirectionURI().toString());
     }
 
-    public static AuthenticationResponse getAuthResponse(){
+    public static AuthenticationResponse getAuthResponse(final HttpServletRequest request) {
+        final AuthenticationRequest authRequest;
+        try {
+            authRequest = AuthenticationRequest.parse(new URI(request.getRequestURI()), request.getQueryString());
+        } catch (ParseException | URISyntaxException e) {
+            throw new FrameworkBaseException("Failed to pass the Authorization request", e);
+        }
+
+        final ResponseType responseType = authRequest.getResponseType();
+
+        final String accessToken = FwUtils.getRandomId(10);
+        final String authCode = FwUtils.getRandomId(5);
+        final String idToken = FwUtils.getRandomId(10);
+
+        final OpenIDConnectObject openIDConnectObject = new OpenIDConnectObject(authCode, accessToken, idToken);
+
+        TokenStorage.addByAuthCode(authCode, openIDConnectObject);
+
+        return new AuthenticationSuccessResponse(
+                authRequest.getRedirectionURI(),
+                new AuthorizationCode(authCode),
+                null,
+                null,
+                authRequest.getState(),
+                null,
+                authRequest.getResponseMode());
 
     }
 }

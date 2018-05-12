@@ -1,6 +1,5 @@
 package storage;
 
-import Common.Exceptions.FrameworkBaseException;
 import Common.Exceptions.FrameworkCheckedException;
 import Models.Client;
 
@@ -12,7 +11,7 @@ public class IDPClients {
     private static final Map<String, Client> CLIENT_MAP = new HashMap<>();
 
     static {
-        Client def = new Client("test", "test", "test");
+        Client def = new Client("test", "test", "http://test");
         addClient(def);
     }
 

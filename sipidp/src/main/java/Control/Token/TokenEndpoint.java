@@ -18,6 +18,9 @@ under the License.
 */
 package Control.Token;
 
+import Common.Exceptions.FrameworkCheckedException;
+
+import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -26,20 +29,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/Control")
+@WebServlet(urlPatterns = "/Token")
 public class TokenEndpoint extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final HttpServletRequest httpServletRequest = (HttpServletRequest) req;
-        final HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            JsonObject jsonObject = TokenRequestProcessor.processRequest(req);
 
-        final String code = httpServletRequest.getParameter("code");
-
-        final ServletOutputStream outputStream = httpServletResponse.getOutputStream();
-        if (code != null && code.equals("Ax10")) {
-            outputStream.print("Here is token : abc123");
-        } else {
-            outputStream.print("Invalid request");
+            final ServletOutputStream outputStream = resp.getOutputStream();
+            outputStream.print(jsonObject.toString());
+            outputStream.flush();
+        } catch (FrameworkCheckedException e) {
+            e.printStackTrace();
         }
     }
 }
