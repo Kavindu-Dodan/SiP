@@ -16,8 +16,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-package Control;import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
+package Control;
+
+import Common.Constants;
+import storage.LoginModule;
+import storage.UserSessions;
+
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,15 +31,23 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/Login")
 public class LoginEndpoint extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
-    }
+//    @Override
+//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
+//    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final ServletOutputStream outputStream = resp.getOutputStream();
-        outputStream.print("Code : Ax10");
+        final String username = req.getParameter(Constants.getUsernameField());
+        final String password = req.getParameter(Constants.getPasswordField());
 
+        if (LoginModule.authenticate(username, password)) {
+            UserSessions.addUserSession(req.getSession().getId(), username);
+            final String queryString = req.getQueryString();
+            resp.sendRedirect(req.getContextPath() + "/authorization?" + queryString);
+        } else {
+            req.setAttribute(Constants.getInvalidCredentialsField(), "Invalid credentials");
+            req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
+        }
     }
 }

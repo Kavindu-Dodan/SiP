@@ -18,6 +18,8 @@ under the License.
 */
 package Control.Authorization;
 
+import Common.Exceptions.FrameworkBaseException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,11 +29,18 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/authorization", name = "AuthorizationEndpoint")
 public class AuthorizationEndpoint extends HttpServlet {
-   @Override
-   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-   }
+    @Override
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        if (!AuthRequestProcessor.preValidations(req)) {
+            throw new FrameworkBaseException("Invalid authorization request");
+        }
 
-   @Override
-   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-   }
+        // Create the Authorization response
+
+
+    }
+
+    @Override
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+    }
 }

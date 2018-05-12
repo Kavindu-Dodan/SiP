@@ -9,6 +9,7 @@ public class LoginModule {
 
     static {
         userCredentialMap.put("admin", "admin");
+        userCredentialMap.put("test", "test");
     }
 
     private LoginModule() {

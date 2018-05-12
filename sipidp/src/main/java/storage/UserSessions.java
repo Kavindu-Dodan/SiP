@@ -1,6 +1,6 @@
 package storage;
 
-import Common.Exceptions.FrameworkBaseException;
+import Common.Exceptions.FrameworkCheckedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +21,11 @@ public class UserSessions {
         return SESSION_MAP.containsKey(sessionId);
     }
 
-    public static String getLoggedInUser(final String sessionId) {
+    public static String getLoggedInUser(final String sessionId) throws FrameworkCheckedException {
         if (checkLoggedIn(sessionId)) {
             return SESSION_MAP.get(sessionId);
         }
 
-        throw new FrameworkBaseException("User not found");
+        throw new FrameworkCheckedException("User not found");
     }
 }

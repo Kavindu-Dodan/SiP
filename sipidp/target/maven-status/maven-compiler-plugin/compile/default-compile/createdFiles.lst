@@ -1,0 +1,16 @@
+Common\Exceptions\FrameworkCheckedException.class
+storage\UserSessions.class
+Control\Token\TokenEndpoint.class
+Models\Client.class
+Common\Exceptions\FrameworkBaseException.class
+Control\AdminEndpoint.class
+storage\IDPClients.class
+storage\LoginModule.class
+Control\Authorization\AuthFilter.class
+Control\Authorization\AuthRequestProcessor.class
+Control\LoginEndpoint.class
+Common\StringUtils.class
+Control\Authorization\AuthorizationEndpoint.class
+storage\LoginCache.class
+Control\Token\TokenFilter.class
+Common\Constants.class

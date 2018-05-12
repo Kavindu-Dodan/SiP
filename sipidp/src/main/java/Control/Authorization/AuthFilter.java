@@ -50,7 +50,7 @@ public class AuthFilter implements Filter {
         } else {
             // Do pre-validations. Forward to login only if they are valid
             if (AuthRequestProcessor.preValidations(httpServletRequest)) {
-
+                req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
             }
         }
     }

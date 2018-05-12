@@ -19,9 +19,13 @@ under the License.
 package Control.Authorization;
 
 import Common.Exceptions.FrameworkBaseException;
+import Common.Exceptions.FrameworkCheckedException;
+import Models.Client;
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
+import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
+import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
+import storage.IDPClients;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -33,11 +37,25 @@ public class AuthRequestProcessor {
     }
 
     public static boolean preValidations(final HttpServletRequest request) {
+        final AuthenticationRequest authRequest;
         try {
-            AuthenticationRequest.parse(new URI(request.getRequestURI()), request.getQueryString());
+            authRequest = AuthenticationRequest.parse(new URI(request.getRequestURI()), request.getQueryString());
         } catch (ParseException | URISyntaxException e) {
-            throw new FrameworkBaseException("Failed to pass the Authorization request", e);`
+            throw new FrameworkBaseException("Failed to pass the Authorization request", e);
         }
-        return true;
+
+        final Client client;
+
+        try {
+            client = IDPClients.getClientOnId(authRequest.getClientID().getValue());
+        } catch (FrameworkCheckedException e) {
+            throw new FrameworkBaseException("Client not found", e);
+        }
+
+        return client.getRedirectUrl().equals(authRequest.getRedirectionURI().toString());
+    }
+
+    public static AuthenticationResponse getAuthResponse(){
+
     }
 }
