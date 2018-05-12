@@ -18,8 +18,6 @@ under the License.
 */
 package Control.Token;
 
-import Common.Exceptions.FrameworkCheckedException;
-
 import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -32,15 +30,11 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/Token")
 public class TokenEndpoint extends HttpServlet {
     @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            JsonObject jsonObject = TokenRequestProcessor.processRequest(req);
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        final JsonObject jsonObject = TokenRequestProcessor.processRequest(req);
 
-            final ServletOutputStream outputStream = resp.getOutputStream();
-            outputStream.print(jsonObject.toString());
-            outputStream.flush();
-        } catch (FrameworkCheckedException e) {
-            e.printStackTrace();
-        }
+        final ServletOutputStream outputStream = resp.getOutputStream();
+        outputStream.print(jsonObject.toString());
+        outputStream.flush();
     }
 }
