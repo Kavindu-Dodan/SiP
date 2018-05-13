@@ -1,3 +1,5 @@
+<%@ page import="Common.Exceptions.FrameworkUncheckedException" %>
+<%@ page import="Common.Exceptions.FrameworkCheckedException" %>
 <!DOCTYPE>
 <html>
 <head>
@@ -5,22 +7,26 @@
 
 <body>
 
-<p>
-    <% out.println("Something went wrong.!"); %> <br>
-    <%
-        Throwable throwable = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
-        String exceptionType = "-";
-        if (throwable != null) {
-            exceptionType = throwable.getClass().getName();
-        }
+<% out.println("Something went wrong.!"); %> <br>
+<%
+    final Throwable throwable = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
-        String message = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
-    %>
+    final String exceptionType = throwable.getClass().getSimpleName();
 
-    Exception type : <%out.println(exceptionType);%> <br>
-    Error Code : <%out.println(message);%> <br>
+    final String message;
 
-</p>
+    if (throwable instanceof FrameworkUncheckedException) {
+        message = ((FrameworkUncheckedException) throwable).getCustomMessage();
+    } else if (throwable instanceof FrameworkCheckedException) {
+        message = ((FrameworkCheckedException) throwable).getCustomMessage();
+    } else {
+        message = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
+    }
+%>
+
+<label>Exception type: </label><%out.println(exceptionType);%><br>
+<label>Error message: </label><%out.println(message);%>
+
 </body>
 </html>

@@ -16,7 +16,7 @@ public class TokenRequestProcessor {
     }
 
     public static JsonObject processRequest(final HttpServletRequest request) {
-        final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        /// TODO: 5/13/2018 Do client authentication/assertion
 
         final Map<String, String[]> parameterMap = request.getParameterMap();
 
@@ -31,6 +31,7 @@ public class TokenRequestProcessor {
             return processTokenRequest(parameterMap);
         }
 
+        final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
         objectBuilder.add("Error", "Invalid grant type");
 
         return objectBuilder.build();
@@ -40,20 +41,22 @@ public class TokenRequestProcessor {
         // Verify auth code
         final String[] codes = parameterMap.get("code");
         if (codes == null || codes.length < 1) {
-            return createErrorResponse("Authorization code parameter provided");
+            return createErrorResponse("Missing authorization code");
         }
+
+        final String authorizationCode = codes[0];
 
         // Get token object by auth code
         final OpenIDConnectObject tokenObject;
         try {
-            tokenObject = (OpenIDConnectObject) TokenStorage.getByAuthCode(codes[0]);
+            tokenObject = (OpenIDConnectObject) TokenStorage.getByAuthCode(authorizationCode);
         } catch (FrameworkCheckedException e) {
-            return createErrorResponse(e, "Invalid authorization code");
+            return createErrorResponse(e, "Invalid grants");
         }
 
         // If valid store by access token
         try {
-            TokenStorage.addByAccessToken(codes[0], tokenObject.getAccessToken(), tokenObject);
+            TokenStorage.addByAccessToken(authorizationCode, tokenObject.getAccessToken(), tokenObject);
         } catch (FrameworkCheckedException e) {
             return createErrorResponse(e, "Failure to store token");
         }

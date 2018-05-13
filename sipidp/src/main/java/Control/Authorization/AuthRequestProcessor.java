@@ -18,7 +18,7 @@ under the License.
 */
 package Control.Authorization;
 
-import Common.Exceptions.FrameworkBaseException;
+import Common.Exceptions.FrameworkUncheckedException;
 import Common.Exceptions.FrameworkCheckedException;
 import Common.FwUtils;
 import Models.Client;
@@ -46,7 +46,7 @@ public class AuthRequestProcessor {
         try {
             authRequest = AuthenticationRequest.parse(new URI(request.getRequestURI()), request.getQueryString());
         } catch (ParseException | URISyntaxException e) {
-            throw new FrameworkBaseException("Failed to pass the Authorization request", e);
+            throw new FrameworkUncheckedException("Failed to pass the Authorization request", e);
         }
 
         final Client client;
@@ -54,10 +54,14 @@ public class AuthRequestProcessor {
         try {
             client = IDPClients.getClientOnId(authRequest.getClientID().getValue());
         } catch (FrameworkCheckedException e) {
-            throw new FrameworkBaseException("Client not found", e);
+            throw new FrameworkUncheckedException("Client not found", e);
         }
 
-        return client.getRedirectUrl().equals(authRequest.getRedirectionURI().toString());
+        if (!client.getRedirectUrl().equals(authRequest.getRedirectionURI().toString())) {
+            throw new FrameworkUncheckedException("Invalid client identifier");
+        }
+
+        return true;
     }
 
     public static AuthenticationResponse getAuthResponse(final HttpServletRequest request) {
@@ -65,9 +69,10 @@ public class AuthRequestProcessor {
         try {
             authRequest = AuthenticationRequest.parse(new URI(request.getRequestURI()), request.getQueryString());
         } catch (ParseException | URISyntaxException e) {
-            throw new FrameworkBaseException("Failed to pass the Authorization request", e);
+            throw new FrameworkUncheckedException("Failed to pass the Authorization request", e);
         }
 
+        // This is needed for SIP
         final ResponseType responseType = authRequest.getResponseType();
 
         final String accessToken = FwUtils.getRandomId(10);

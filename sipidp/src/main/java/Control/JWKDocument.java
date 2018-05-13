@@ -1,7 +1,7 @@
 package Control;
 
 import Common.CertificateLoader;
-import Common.Exceptions.FrameworkBaseException;
+import Common.Exceptions.FrameworkUncheckedException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
 
@@ -25,7 +25,7 @@ public class JWKDocument extends HttpServlet {
         try {
             jwk = JWK.parse(certificate);
         } catch (JOSEException e) {
-            throw new FrameworkBaseException("Error while loading to JWK", e);
+            throw new FrameworkUncheckedException("Error while loading to JWK", e);
         }
 
         resp.getOutputStream().print(jwk.toJSONObject().toJSONString());

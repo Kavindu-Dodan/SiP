@@ -8,9 +8,11 @@ import java.util.Map;
 
 public class TokenStorage {
 
-    private static final Map<String, String> TOKEN_BY_AUTH_CODE = new HashMap<>();
-    private static final Map<String, String> TOKEN_BY_ACCESS_CODE = new HashMap<>();
+    // For authorization code based flow
+    private static final Map<String, TokenObject> TOKEN_BY_AUTH_CODE = new HashMap<>();
 
+    // Permanent store
+    private static final Map<String, String> TOKEN_BY_ACCESS_CODE = new HashMap<>();
     private static final Map<String, TokenObject> TOKEN_OBJECT_MAP = new HashMap<>();
 
     private TokenStorage() {
@@ -18,8 +20,7 @@ public class TokenStorage {
 
     // Temporal store - store for auth code
     public static void addByAuthCode(final String authCode, final TokenObject tokenObject) {
-        TOKEN_OBJECT_MAP.put(tokenObject.getObjId(), tokenObject);
-        TOKEN_BY_AUTH_CODE.put(authCode, tokenObject.getObjId());
+        TOKEN_BY_AUTH_CODE.put(authCode, tokenObject);
     }
 
     public static TokenObject getByAuthCode(final String authCode) throws FrameworkCheckedException {
@@ -28,9 +29,7 @@ public class TokenStorage {
         }
 
         // Usage of auth code removes token. Later we must add it to access token based map
-        TokenObject tokenObject = TOKEN_OBJECT_MAP.get(TOKEN_BY_AUTH_CODE.get(authCode));
-
-        TOKEN_OBJECT_MAP.remove(TOKEN_BY_AUTH_CODE.get(authCode));
+        TokenObject tokenObject = TOKEN_BY_AUTH_CODE.get(authCode);
         TOKEN_BY_AUTH_CODE.remove(authCode);
 
         return tokenObject;
@@ -43,6 +42,7 @@ public class TokenStorage {
             final TokenObject tokenObject) throws FrameworkCheckedException {
         // verify not stored against auth code
         if (TOKEN_BY_AUTH_CODE.containsKey(authCode)) {
+            TOKEN_BY_AUTH_CODE.remove(authCode);
             throw new FrameworkCheckedException("Invalid token addition");
         }
 

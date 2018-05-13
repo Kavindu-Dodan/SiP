@@ -18,6 +18,7 @@ under the License.
 */
 package Control.Authorization;
 
+import Common.Exceptions.FrameworkUncheckedException;
 import storage.UserSessions;
 
 import javax.servlet.Filter;
@@ -27,7 +28,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
@@ -40,7 +40,6 @@ public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) req;
-        final HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
 
         // Session must be created if it is not already created
         final HttpSession session = httpServletRequest.getSession(true);
@@ -52,6 +51,8 @@ public class AuthFilter implements Filter {
             if (AuthRequestProcessor.preValidations(httpServletRequest)) {
                 req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
             }
+
+            throw new FrameworkUncheckedException("Invalid authorization request");
         }
     }
 

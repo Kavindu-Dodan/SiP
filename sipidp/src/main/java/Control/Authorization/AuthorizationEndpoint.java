@@ -18,7 +18,7 @@ under the License.
 */
 package Control.Authorization;
 
-import Common.Exceptions.FrameworkBaseException;
+import Common.Exceptions.FrameworkUncheckedException;
 import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 
@@ -34,7 +34,7 @@ public class AuthorizationEndpoint extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         if (!AuthRequestProcessor.preValidations(req)) {
-            throw new FrameworkBaseException("Invalid authorization request");
+            throw new FrameworkUncheckedException("Invalid authorization request");
         }
 
         // Create the Authorization response

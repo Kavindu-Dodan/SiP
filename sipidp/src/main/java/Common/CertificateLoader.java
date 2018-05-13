@@ -1,6 +1,6 @@
 package Common;
 
-import Common.Exceptions.FrameworkBaseException;
+import Common.Exceptions.FrameworkUncheckedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class CertificateLoader {
             x509Certificate = loadX509Certificate();
             privateKey = loadPrivateKey();
         } catch (IOException | CertificateException e) {
-            throw new FrameworkBaseException("Error while loading certificate");
+            throw new FrameworkUncheckedException("Error while loading certificate");
         }
     }
 
@@ -68,7 +68,7 @@ public class CertificateLoader {
             return keyFactory.generatePrivate(encodedKeySpec);
 
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            throw new FrameworkBaseException("Error", e);
+            throw new FrameworkUncheckedException("Error", e);
         }
     }
 
