@@ -3,12 +3,12 @@ package Models;
 public class Client {
 
     private final String clientId;
-    private final String credentials;
+    private final String clientPassword;
     private final String redirectUrl;
 
     public Client(final String clientId, final String credentials, final String redirectUrl) {
         this.clientId = clientId;
-        this.credentials = credentials;
+        this.clientPassword = credentials;
         this.redirectUrl = redirectUrl;
     }
 
@@ -16,11 +16,11 @@ public class Client {
         return clientId;
     }
 
-    public String getCredentials() {
-        return credentials;
-    }
-
     public String getRedirectUrl() {
         return redirectUrl;
+    }
+
+    public boolean authenticate(final String password) {
+        return this.clientPassword.equals(password);
     }
 }

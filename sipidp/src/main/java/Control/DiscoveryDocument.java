@@ -19,6 +19,7 @@ public class DiscoveryDocument extends HttpServlet {
         final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
         objectBuilder.add("jwks_uri", "/openid-configuration/jwks_uri");
+        objectBuilder.add("introspection_uri", "/validations/token/introspect");
         outputStream.print(objectBuilder.build().toString());
     }
 }

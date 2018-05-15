@@ -7,9 +7,22 @@
         <filter-class>Control.Authorization.AuthFilter</filter-class>
     </filter>
 
+    <filter>
+        <filter-name>BearerFilter</filter-name>
+        <filter-class>Control.Introspection.AuthHeaderFilter</filter-class>
+    </filter>
+
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/authorization</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>BearerFilter</filter-name>
+        <url-pattern>/validations</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>

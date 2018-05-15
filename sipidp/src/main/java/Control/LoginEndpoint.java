@@ -19,7 +19,7 @@ under the License.
 package Control;
 
 import Common.Constants;
-import storage.LoginModule;
+import storage.EndUsers;
 import storage.UserSessions;
 
 import javax.servlet.ServletException;
@@ -41,7 +41,7 @@ public class LoginEndpoint extends HttpServlet {
         final String username = req.getParameter(Constants.getUsernameField());
         final String password = req.getParameter(Constants.getPasswordField());
 
-        if (LoginModule.authenticate(username, password)) {
+        if (EndUsers.authenticate(username, password)) {
             UserSessions.addUserSession(req.getSession().getId(), username);
             final String queryString = req.getQueryString();
             resp.sendRedirect(req.getContextPath() + "/authorization?" + queryString);

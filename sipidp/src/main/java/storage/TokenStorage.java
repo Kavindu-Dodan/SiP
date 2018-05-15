@@ -49,4 +49,9 @@ public class TokenStorage {
         TOKEN_OBJECT_MAP.put(tokenObject.getObjId(), tokenObject);
         TOKEN_BY_ACCESS_CODE.put(accessToken, tokenObject.getObjId());
     }
+
+    // For token introspection
+    public static boolean verifyAccessToken(final String accessToken) {
+        return TOKEN_BY_ACCESS_CODE.containsKey(accessToken);
+    }
 }

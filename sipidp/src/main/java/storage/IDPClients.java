@@ -30,4 +30,8 @@ public class IDPClients {
         throw new FrameworkCheckedException("Client not found");
     }
 
+    public static boolean authenticate(final String username, final String password) {
+        return CLIENT_MAP.containsKey(username) && CLIENT_MAP.get(username).authenticate(password);
+    }
+
 }

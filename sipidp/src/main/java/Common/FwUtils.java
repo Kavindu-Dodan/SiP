@@ -1,15 +1,11 @@
 package Common;
 
-import com.nimbusds.jose.jwk.JWK;
+import Common.Exceptions.FrameworkCheckedException;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Base64;
 
 public class FwUtils {
 
@@ -28,8 +24,53 @@ public class FwUtils {
         return builder.toString();
     }
 
+    public static String decodeBase64(final String base64Encoding) {
+        return new String(Base64.getDecoder().decode(base64Encoding));
+    }
+
     public static long getCurrentTimeStamp() {
         return LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
     }
 
+    public static boolean isBasicAuth(final String headerValue) {
+        return headerValue != null && headerValue.startsWith("Basic");
+    }
+
+    public static boolean isBearerAuth(final String headerValue) {
+        return headerValue != null && headerValue.startsWith("Bearer");
+    }
+
+    public static String[] getCredentialsFromBasicHeader(final String headerValue) throws FrameworkCheckedException {
+        if (!isBasicAuth(headerValue)) {
+            throw new FrameworkCheckedException("Provided header value is not basic authentication");
+        }
+
+        final String[] splits = headerValue.split(" ");
+
+        if (splits.length < 2) {
+            throw new FrameworkCheckedException("Malformed basic header");
+        }
+
+        final String[] decodedCredentials = decodeBase64(splits[1]).split(":");
+
+        if (decodedCredentials.length < 2) {
+            throw new FrameworkCheckedException("Malformed basic header");
+        }
+
+        return decodedCredentials;
+    }
+
+    public static String getCredentialFromBearerHeader(final String headerValue) throws FrameworkCheckedException {
+        if (!isBearerAuth(headerValue)) {
+            throw new FrameworkCheckedException("Provided header value is not basic authentication");
+        }
+
+        final String[] splits = headerValue.split(" ");
+
+        if (splits.length < 2) {
+            throw new FrameworkCheckedException("Malformed basic header");
+        }
+
+        return splits[1];
+    }
 }
