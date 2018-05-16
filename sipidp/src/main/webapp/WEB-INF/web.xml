@@ -22,7 +22,7 @@
 
     <filter-mapping>
         <filter-name>BearerFilter</filter-name>
-        <url-pattern>/validations</url-pattern>
+        <url-pattern>/validations/token/introspect</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
