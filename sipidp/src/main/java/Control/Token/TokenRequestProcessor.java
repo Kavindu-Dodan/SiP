@@ -2,6 +2,7 @@ package Control.Token;
 
 import Common.Exceptions.FrameworkCheckedException;
 import Models.OpenIDConnectObject;
+import Models.SharedIdentityObject;
 import storage.TokenStorage;
 
 import javax.json.Json;
@@ -66,6 +67,11 @@ public class TokenRequestProcessor {
         objectBuilder.add("access_token", tokenObject.getAccessToken());
         objectBuilder.add("token_type", "Bearer");
         objectBuilder.add("id_token", tokenObject.getIdToken());
+
+        if (tokenObject instanceof SharedIdentityObject) {
+            final SharedIdentityObject sharedIdentityObject = (SharedIdentityObject) tokenObject;
+            objectBuilder.add("shared_token", sharedIdentityObject.getSharedIdentityToken());
+        }
 
         return objectBuilder.build();
     }

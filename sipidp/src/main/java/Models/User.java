@@ -6,6 +6,7 @@ public class User {
     private final String password;
 
     private String email;
+    private String age;
 
     public User(final String username, final String password) {
         this.username = username;
@@ -26,5 +27,13 @@ public class User {
 
     public boolean authenticate(final String password) {
         return this.password.equals(password);
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
     }
 }

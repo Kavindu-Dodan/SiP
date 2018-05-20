@@ -5,6 +5,7 @@ public class Constants {
     private static final String USERNAME_FIELD = "username";
     private static final String PASSWORD_FIELD = "password";
     private static final String CONSENT_FIELD = "consent_grant";
+    private static final String ADD_USER_FILED = "add user";
 
 
     private static final String INVALID_CREDENTIALS_FIELD = "INVALID_AUTHENTICATION";
@@ -24,5 +25,9 @@ public class Constants {
 
     public static String getConsentField() {
         return CONSENT_FIELD;
+    }
+
+    public static String getAddUserFiled() {
+        return ADD_USER_FILED;
     }
 }

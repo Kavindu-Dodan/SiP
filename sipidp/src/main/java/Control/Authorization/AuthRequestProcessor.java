@@ -26,6 +26,7 @@ import Models.OpenIDConnectObject;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
@@ -35,6 +36,7 @@ import storage.TokenStorage;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 public class AuthRequestProcessor {
 
@@ -61,6 +63,7 @@ public class AuthRequestProcessor {
             throw new FrameworkUncheckedException("Invalid client identifier");
         }
 
+
         return true;
     }
 
@@ -72,8 +75,10 @@ public class AuthRequestProcessor {
             throw new FrameworkUncheckedException("Failed to pass the Authorization request", e);
         }
 
-        // This is needed for SIP
         final ResponseType responseType = authRequest.getResponseType();
+
+        // This is needed for SIP
+        final List<String> scopeValues = authRequest.getScope().toStringList();
 
         final String accessToken = FwUtils.getRandomId(10);
         final String authCode = FwUtils.getRandomId(5);
