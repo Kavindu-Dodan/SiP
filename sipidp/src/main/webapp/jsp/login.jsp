@@ -2,10 +2,13 @@
 <!DOCTYPE>
 <html>
 <head>
+    <title>
+        Login Page
+    </title>
 </head>
 
 <body>
-<p> This should be the login page</p>
+<p> Please login to continue.</p>
 
 <form method="post" action="<%out.println(request.getContextPath()+"/Login?"+ request.getQueryString());%>">
     <label>Username : </label><input name="<%out.print(Constants.getUsernameField());%>" type="text"><br>

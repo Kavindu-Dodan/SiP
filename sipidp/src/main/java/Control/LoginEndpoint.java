@@ -43,8 +43,7 @@ public class LoginEndpoint extends HttpServlet {
 
         if (EndUsers.authenticate(username, password)) {
             UserSessions.addUserSession(req.getSession().getId(), username);
-            final String queryString = req.getQueryString();
-            resp.sendRedirect(req.getContextPath() + "/authorization?" + queryString);
+            req.getRequestDispatcher("jsp/consent.jsp").forward(req, resp);
         } else {
             req.setAttribute(Constants.getInvalidCredentialsField(), "Invalid credentials");
             req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
