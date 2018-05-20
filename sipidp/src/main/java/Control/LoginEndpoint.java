@@ -31,10 +31,7 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/Login")
 public class LoginEndpoint extends HttpServlet {
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
-//    }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,10 +40,10 @@ public class LoginEndpoint extends HttpServlet {
 
         if (EndUsers.authenticate(username, password)) {
             UserSessions.addUserSession(req.getSession().getId(), username);
-            req.getRequestDispatcher("jsp/consent.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/consent.jsp").forward(req, resp);
         } else {
             req.setAttribute(Constants.getInvalidCredentialsField(), "Invalid credentials");
-            req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/login.jsp").forward(req, resp);
         }
     }
 }

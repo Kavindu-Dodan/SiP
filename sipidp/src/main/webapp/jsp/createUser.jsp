@@ -11,7 +11,7 @@
     <title>Add User</title>
 </head>
 <body>
-<form method="post" action="<%out.println(request.getContextPath()+"/Consent?"+ request.getQueryString());%>">
+<form method="post" action="<%out.println(request.getContextPath()+"/admin/createUser");%>">
     <label>Fill details to add a user</label><br>
     <label>Username : <input type="text" name="username"> </label><br>
     <label>Password : <input type="password" name="password"></label> <br>
