@@ -3,6 +3,7 @@ package storage;
 import Common.Exceptions.FrameworkCheckedException;
 import Models.Client;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public class IDPClients {
     private static final Map<String, Client> CLIENT_MAP = new HashMap<>();
 
     static {
-        Client def = new Client(clientName, "test", "test", "http://test");
+        Client def = new Client("MyClient", "test", "test", "http://test");
         addClient(def);
     }
 
@@ -32,6 +33,10 @@ public class IDPClients {
 
     public static boolean authenticate(final String username, final String password) {
         return CLIENT_MAP.containsKey(username) && CLIENT_MAP.get(username).authenticate(password);
+    }
+
+    public static Collection<Client> getClients() {
+        return CLIENT_MAP.values();
     }
 
 }

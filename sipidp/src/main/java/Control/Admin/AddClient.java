@@ -2,8 +2,6 @@ package Control.Admin;
 
 import Common.FwUtils;
 import Models.Client;
-import Models.User;
-import storage.EndUsers;
 import storage.IDPClients;
 
 import javax.servlet.ServletException;
@@ -17,7 +15,7 @@ import java.io.IOException;
 import static java.lang.String.format;
 
 @WebServlet(urlPatterns = "/admin/addClient")
-public class ConfigureClient extends HttpServlet {
+public class AddClient extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,9 +34,9 @@ public class ConfigureClient extends HttpServlet {
 
         ServletOutputStream outputStream = resp.getOutputStream();
 
-        outputStream.print("Client added successfully");
-        outputStream.print(format("Client identifier : %s", id));
-        outputStream.print(format("Client password : %s", password));
+        outputStream.println("Client added successfully");
+        outputStream.println(format("Client identifier : %s", id));
+        outputStream.println(format("Client password : %s", password));
     }
 
 }

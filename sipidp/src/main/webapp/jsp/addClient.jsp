@@ -14,7 +14,7 @@
 <form method="post" action="<%out.println(request.getContextPath()+"/admin/addClient");%>">
     <label>Fill details to add a client</label><br>
     <label>Client name : <input type="text" name="clientName"> </label><br>
-    <label>Redirect URL : <input type="password" name="redirectUrl"></label> <br>
+    <label>Redirect URL : <input type="text" name="redirectUrl"></label> <br>
     <input type="submit" name="<%out.print(Constants.getAddUserFiled());%>">
 </form>
 </body>

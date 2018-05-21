@@ -3,6 +3,7 @@ package storage;
 import Common.Exceptions.FrameworkCheckedException;
 import Models.User;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,5 +33,9 @@ public class EndUsers {
 
     public static boolean authenticate(final String username, final String password) {
         return USER_MAP.containsKey(username) && USER_MAP.get(username).authenticate(password);
+    }
+
+    public static Collection<User> getUsers() {
+        return USER_MAP.values();
     }
 }
