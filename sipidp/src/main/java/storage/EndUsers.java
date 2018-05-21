@@ -18,6 +18,10 @@ public class EndUsers {
     private EndUsers() {
     }
 
+    public static void addNewUser(final User user) {
+        USER_MAP.put(user.getUsername(), user);
+    }
+
     public static User getUserByUsername(final String username) throws FrameworkCheckedException {
         if (USER_MAP.containsKey(username)) {
             return USER_MAP.get(username);

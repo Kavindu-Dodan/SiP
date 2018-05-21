@@ -11,7 +11,7 @@ public class IDPClients {
     private static final Map<String, Client> CLIENT_MAP = new HashMap<>();
 
     static {
-        Client def = new Client("test", "test", "http://test");
+        Client def = new Client(clientName, "test", "test", "http://test");
         addClient(def);
     }
 

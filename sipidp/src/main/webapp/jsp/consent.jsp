@@ -1,4 +1,8 @@
-<%@ page import="Common.Constants" %><%--
+<%@ page import="Common.Constants" %>
+<%@ page import="storage.UserSessions" %>
+<%@ page import="Common.Exceptions.FrameworkCheckedException" %>
+<%@ page import="storage.EndUsers" %>
+<%@ page import="Models.User" %><%--
   Created by IntelliJ IDEA.
   User: kadolk
   Date: 5/20/2018
@@ -14,7 +18,30 @@
 <p> Do you accept following information to be shared ?</p>
 
 <form method="post" action="<%out.println(request.getContextPath()+"/Consent?"+ request.getQueryString());%>">
-    <label>List of scopes should go here</label><br>
+
+    <%
+        String loggedInUser = null;
+        try {
+            loggedInUser = UserSessions.getLoggedInUser(request.getSession(false).getId());
+        } catch (FrameworkCheckedException e) {
+            e.printStackTrace();
+        }
+
+        User endUser = null;
+        try {
+            endUser = EndUsers.getUserByUsername(loggedInUser);
+        } catch (FrameworkCheckedException e) {
+            e.printStackTrace();
+        }
+
+        if (endUser != null) {
+            %>
+                <label>Email : <%out.print(endUser.getEmail());%></label><br>
+                <label>Age : <%out.print(endUser.getAge());%></label><br>
+            <%
+        }
+
+    %>
     <input type="submit" value="Accept" name="<%out.print(Constants.getConsentField());%>">
     <input type="submit" value="Decline" name="<%out.print(Constants.getConsentField());%>">
 </form>
