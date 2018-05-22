@@ -2,7 +2,7 @@ package Control.Introspection;
 
 import Common.Exceptions.FrameworkCheckedException;
 import Common.FwUtils;
-import storage.IDPClients;
+import storage.Clients;
 import storage.TokenStorage;
 
 import javax.servlet.Filter;
@@ -36,7 +36,7 @@ public class AuthHeaderFilter implements Filter {
             try {
                 final String[] credentialsFromBasicHeader = getCredentialsFromBasicHeader(authorizationHeader);
 
-                if (IDPClients.authenticate(credentialsFromBasicHeader[0], credentialsFromBasicHeader[1])) {
+                if (Clients.authenticate(credentialsFromBasicHeader[0], credentialsFromBasicHeader[1])) {
                     chain.doFilter(request, response);
                     return;
                 }

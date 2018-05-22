@@ -26,11 +26,10 @@ import Models.OpenIDConnectObject;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
-import storage.IDPClients;
+import storage.Clients;
 import storage.TokenStorage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +53,7 @@ public class AuthRequestProcessor {
         final Client client;
 
         try {
-            client = IDPClients.getClientOnId(authRequest.getClientID().getValue());
+            client = Clients.getClientOnId(authRequest.getClientID().getValue());
         } catch (FrameworkCheckedException e) {
             throw new FrameworkUncheckedException("Client not found", e);
         }

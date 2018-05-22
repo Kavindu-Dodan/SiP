@@ -15,6 +15,7 @@
 <label>List of admin functions</label>
 
 <br>
+<br>
 
 <a href="/sip-identity-provider/admin/createUser">Add User</a> <br>
 <br>
@@ -23,6 +24,10 @@
 <a href="/sip-identity-provider/admin/addClient">Add client</a> <br>
 <br>
 <a href="/sip-identity-provider/admin/ListClients">List clients</a> <br>
+<br>
+<a href="/sip-identity-provider/admin/addProvider">Add Identity Provider</a> <br>
+<br>
+<a href="/sip-identity-provider/admin/ListProviders">List Identity Provider</a> <br>
 
 </body>
 </html>

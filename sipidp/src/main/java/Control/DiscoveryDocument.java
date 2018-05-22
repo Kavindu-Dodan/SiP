@@ -1,5 +1,7 @@
 package Control;
 
+import Common.Constants;
+
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletOutputStream;
@@ -18,8 +20,16 @@ public class DiscoveryDocument extends HttpServlet {
 
         final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
-        objectBuilder.add("jwks_uri", "/openid-configuration/jwks_uri");
-        objectBuilder.add("introspection_uri", "/validations/token/introspect");
+        final int localPort = req.getLocalPort();
+        final String remoteHost = req.getRemoteHost();
+
+        final String hostPort = "http://" + remoteHost + ":" + localPort;
+
+        final String issuer = hostPort + Constants.getContextRoot();
+
+        objectBuilder.add("issuer", issuer);
+        objectBuilder.add("jwks_uri", issuer + "/openid-configuration/jwks_uri");
+        objectBuilder.add("introspection_uri", issuer + "/validations/token/introspect");
         outputStream.print(objectBuilder.build().toString());
     }
 }

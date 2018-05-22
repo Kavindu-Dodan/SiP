@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IDPClients {
+public class Clients {
 
     private static final Map<String, Client> CLIENT_MAP = new HashMap<>();
 
@@ -16,7 +16,7 @@ public class IDPClients {
         addClient(def);
     }
 
-    private IDPClients() {
+    private Clients() {
     }
 
     public static void addClient(final Client newClient) {

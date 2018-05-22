@@ -2,7 +2,7 @@ package Control.Admin;
 
 import Common.FwUtils;
 import Models.Client;
-import storage.IDPClients;
+import storage.Clients;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -30,7 +30,7 @@ public class AddClient extends HttpServlet {
         final String id = FwUtils.getRandomId(10);
         final String password = FwUtils.getRandomId(10);
 
-        IDPClients.addClient(new Client(name, id, password, redirectUrl));
+        Clients.addClient(new Client(name, id, password, redirectUrl));
 
         ServletOutputStream outputStream = resp.getOutputStream();
 
