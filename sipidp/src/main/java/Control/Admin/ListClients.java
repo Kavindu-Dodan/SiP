@@ -1,6 +1,7 @@
 package Control.Admin;
 
 import Common.Exceptions.FrameworkUncheckedException;
+import Common.FwUtils;
 import storage.Clients;
 
 import javax.servlet.ServletException;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static java.lang.String.format;
 
@@ -19,18 +21,28 @@ public class ListClients extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final ServletOutputStream outputStream = resp.getOutputStream();
+
+        FwUtils.addHtmlHeaderWithTitle(
+                outputStream,
+                "Registered client applications",
+                Arrays.asList("Client name", "Client ID", "Client redirect URL"));
+
         Clients.getClients().forEach(
                 client -> {
                     try {
-                        outputStream.println(
-                                format("Client name: %s  Client id: %s Redirect URL: %s",
-                                        client.getClientName(),
-                                        client.getClientId(),
-                                        client.getRedirectUrl()));
+                        outputStream.println("<tr>");
+
+                        outputStream.println(format("<td>%s</td>", client.getClientName()));
+                        outputStream.println(format("<td>%s</td>", client.getClientId()));
+                        outputStream.println(format("<td>%s</td>", client.getRedirectUrl()));
+
+                        outputStream.println("</tr>");
                     } catch (IOException e) {
                         throw new FrameworkUncheckedException("Error while writing to outputstream");
                     }
                 }
         );
+
+        FwUtils.addHtmlFooter(outputStream);
     }
 }

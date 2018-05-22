@@ -2,10 +2,15 @@ package Common;
 
 import Common.Exceptions.FrameworkCheckedException;
 
+import javax.servlet.ServletOutputStream;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Base64;
+import java.util.List;
+
+import static java.lang.String.format;
 
 public class FwUtils {
 
@@ -72,5 +77,43 @@ public class FwUtils {
         }
 
         return splits[1];
+    }
+
+    public static void addHtmlHeaderWithTitle(
+            final ServletOutputStream outputStream,
+            final String title,
+            final List<String> columnHeaders) throws IOException {
+
+        outputStream.println("<html>");
+        outputStream.println("<head>");
+        outputStream.println("<style>\n" +
+                "table, th, td {\n" +
+                "    border: 1px solid black;\n" +
+                "}\n" +
+                "</style>");
+        outputStream.println("</head>");
+        outputStream.println("<body>");
+
+        outputStream.println("<table style=\"width:100%\">");
+        outputStream.println(format("<h1>%s</h1>", title));
+
+        outputStream.println("<tr>");
+        columnHeaders.forEach(
+                header -> {
+                    try {
+                        outputStream.println(format("<th>%s</th>", header));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
+        outputStream.println("</tr>");
+
+    }
+
+    public static void addHtmlFooter(final ServletOutputStream outputStream) throws IOException {
+        outputStream.println("</table>");
+        outputStream.println("</body>");
+        outputStream.println("</html>");
     }
 }
