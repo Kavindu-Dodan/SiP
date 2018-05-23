@@ -18,11 +18,15 @@ under the License.
 */
 package Control.Authorization;
 
-import Common.Exceptions.FrameworkUncheckedException;
+import Common.Constants;
 import Common.Exceptions.FrameworkCheckedException;
+import Common.Exceptions.FrameworkUncheckedException;
 import Common.FwUtils;
+import Common.JWTCreator;
 import Models.Client;
 import Models.OpenIDConnectObject;
+import Models.User;
+import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
@@ -30,12 +34,18 @@ import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 import storage.Clients;
+import storage.EndUsers;
 import storage.TokenStorage;
+import storage.UserSessions;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static java.lang.String.format;
 
 public class AuthRequestProcessor {
 
@@ -62,7 +72,6 @@ public class AuthRequestProcessor {
             throw new FrameworkUncheckedException("Invalid client identifier");
         }
 
-
         return true;
     }
 
@@ -74,14 +83,56 @@ public class AuthRequestProcessor {
             throw new FrameworkUncheckedException("Failed to pass the Authorization request", e);
         }
 
+        // This is needed for different flows
         final ResponseType responseType = authRequest.getResponseType();
+
+        if (responseType.impliesCodeFlow()) {
+            return processForAuthorizationCodeFlow(authRequest, request);
+        } else {
+            throw new FrameworkUncheckedException("Unsupported response type");
+        }
+
+    }
+
+    private static AuthenticationResponse processForAuthorizationCodeFlow(
+            final AuthenticationRequest authRequest,
+            final HttpServletRequest request) {
+
+        final User user;
+
+        try {
+            final String username = UserSessions.getLoggedInUser(request.getSession().getId());
+            user = EndUsers.getUserByUsername(username);
+        } catch (FrameworkCheckedException e) {
+            throw new FrameworkUncheckedException("Client not found", e);
+        }
+
+
+        final String iss =
+                format("http://%s:%s%s",
+                        request.getRemoteHost(),
+                        request.getLocalPort(),
+                        Constants.getContextRoot());
+
+        final Map<String, String> claimMap = new HashMap<>();
+
+        claimMap.put("sub", user.getUsername());
+        claimMap.put("iss", iss);
+        claimMap.put("email", user.getEmail());
+
+        final SignedJWT jwt;
+        try {
+            jwt = JWTCreator.createJWT(claimMap);
+        } catch (FrameworkCheckedException e) {
+            throw new FrameworkUncheckedException("Something went wrong", e);
+        }
 
         // This is needed for SIP
         final List<String> scopeValues = authRequest.getScope().toStringList();
 
-        final String accessToken = FwUtils.getRandomId(10);
-        final String authCode = FwUtils.getRandomId(5);
-        final String idToken = FwUtils.getRandomId(10);
+        final String authCode = FwUtils.getRandomId(15);
+        final String accessToken = FwUtils.getRandomId(15);
+        final String idToken = jwt.serialize();
 
         final OpenIDConnectObject openIDConnectObject = new OpenIDConnectObject(authCode, accessToken, idToken);
 
@@ -95,6 +146,5 @@ public class AuthRequestProcessor {
                 authRequest.getState(),
                 null,
                 authRequest.getResponseMode());
-
     }
 }

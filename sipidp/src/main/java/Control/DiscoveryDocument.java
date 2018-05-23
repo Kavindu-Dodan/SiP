@@ -24,7 +24,6 @@ public class DiscoveryDocument extends HttpServlet {
         final String remoteHost = req.getRemoteHost();
 
         final String hostPort = "http://" + remoteHost + ":" + localPort;
-
         final String issuer = hostPort + Constants.getContextRoot();
 
         objectBuilder.add("issuer", issuer);
