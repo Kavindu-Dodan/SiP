@@ -28,6 +28,6 @@ public class JWKDocument extends HttpServlet {
             throw new FrameworkUncheckedException("Error while loading to JWK", e);
         }
 
-        resp.getOutputStream().print(jwk.toJSONObject().toJSONString());
+        resp.getOutputStream().print(jwk.toJSONString());
     }
 }

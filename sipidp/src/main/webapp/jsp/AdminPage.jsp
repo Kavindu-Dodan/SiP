@@ -31,10 +31,10 @@
         <h3>End user related functionality</h3>
 
         <div class="row">
-            <div class="col-2">
+            <div class="col-3">
                 <a class="btn btn-primary" href="/sip-identity-provider/admin/createUser" role="button">Add User</a>
             </div>
-            <div class="col-2">
+            <div class="col-3">
                 <a class="btn btn-primary" href="/sip-identity-provider/admin/ListUsers" role="button">List Users</a>
             </div>
         </div>
@@ -45,10 +45,10 @@
         <h3>Client application related functionality</h3>
         <br>
         <div class="row">
-            <div class="col-2">
+            <div class="col-3">
                 <a class="btn btn-primary" href="/sip-identity-provider/admin/addClient" role="button">Add client</a>
             </div>
-            <div class="col-2">
+            <div class="col-3">
                 <a class="btn btn-primary" href="/sip-identity-provider/admin/ListClients" role="button">List
                     Clients</a>
             </div>
@@ -60,11 +60,11 @@
         <h3>Identity provider related functionality</h3>
         <br>
         <div class="row">
-            <div class="col-2">
+            <div class="col-3">
                 <a class="btn btn-primary" href="/sip-identity-provider/admin/addProvider" role="button">Add Identity
                     Provider</a>
             </div>
-            <div class="col-2">
+            <div class="col-3">
                 <a class="btn btn-primary" href="/sip-identity-provider/admin/ListProviders" role="button">List Identity
                     Provider</a>
             </div>

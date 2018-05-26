@@ -1,10 +1,20 @@
 package Common;
 
 import Common.Exceptions.FrameworkCheckedException;
+import com.nimbusds.jose.jwk.JWK;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.servlet.ServletOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.SecureRandom;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Base64;
@@ -137,5 +147,50 @@ public class FwUtils {
         outputStream.println("</div>");
         outputStream.println("</body>");
         outputStream.println("</html>");
+    }
+
+    public static JsonObject getDiscoveryDocument(final String discoveryUrl) throws FrameworkCheckedException {
+        return getJsonResponseFromURL(discoveryUrl);
+    }
+
+    public static JWK getJWKInformation(final String jwks_uri) throws FrameworkCheckedException {
+        final JsonObject jsonResponseFromURL = getJsonResponseFromURL(jwks_uri);
+
+        try {
+            return JWK.parse(jsonResponseFromURL.toString());
+        } catch (ParseException e) {
+            throw new FrameworkCheckedException("Error while obtaining JWK", e);
+        }
+    }
+
+    private static JsonObject getJsonResponseFromURL(final String URL) throws FrameworkCheckedException {
+        final String jsonResponse;
+
+        try {
+            final URL url = new URL(URL);
+
+            final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoOutput(true);
+
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            final StringBuilder builder = new StringBuilder();
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                builder.append(line);
+            }
+
+            jsonResponse = builder.toString();
+        } catch (IOException e) {
+            throw new FrameworkCheckedException("Invalid registration details", e);
+        }
+
+        return Json.createReader(new StringReader(jsonResponse)).readObject();
     }
 }

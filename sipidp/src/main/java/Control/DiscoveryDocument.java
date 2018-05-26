@@ -1,7 +1,5 @@
 package Control;
 
-import Common.Constants;
-
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletOutputStream;
@@ -11,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static Common.Constants.getHOST;
+import static Common.Constants.getThisIssuer;
 
 @WebServlet(urlPatterns = "/.well-known/openid-configuration")
 public class DiscoveryDocument extends HttpServlet {
@@ -22,14 +20,9 @@ public class DiscoveryDocument extends HttpServlet {
 
         final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
-        final int localPort = req.getLocalPort();
-
-        final String hostPort = "http://" + getHOST() + ":" + localPort;
-        final String issuer = hostPort + Constants.getContextRoot();
-
-        objectBuilder.add("issuer", issuer);
-        objectBuilder.add("jwks_uri", issuer + "/openid-configuration/jwks_uri");
-        objectBuilder.add("introspection_uri", issuer + "/validations/token/introspect");
+        objectBuilder.add("issuer", getThisIssuer());
+        objectBuilder.add("jwks_uri", getThisIssuer() + "/openid-configuration/jwks_uri");
+        objectBuilder.add("introspection_uri", getThisIssuer() + "/validations/token/introspect");
         outputStream.print(objectBuilder.build().toString());
     }
 }

@@ -18,7 +18,6 @@ under the License.
 */
 package Control.Authorization;
 
-import Common.Constants;
 import Common.Exceptions.FrameworkCheckedException;
 import Common.Exceptions.FrameworkUncheckedException;
 import Common.FwUtils;
@@ -50,7 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static Common.Constants.getHOST;
+import static Common.Constants.getThisIssuer;
 import static Common.Constants.getIdentityShareScope;
 import static java.lang.String.format;
 
@@ -107,11 +106,7 @@ public class AuthRequestProcessor {
             throw new FrameworkUncheckedException("Client not found", e);
         }
 
-        final String iss =
-                format("http://%s:%s%s",
-                        getHOST(),
-                        request.getLocalPort(),
-                        Constants.getContextRoot());
+        final String iss = getThisIssuer();
 
         // This is needed for different flows
         final ResponseType responseType = authRequest.getResponseType();

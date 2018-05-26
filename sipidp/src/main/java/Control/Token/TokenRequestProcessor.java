@@ -1,17 +1,32 @@
 package Control.Token;
 
 import Common.Exceptions.FrameworkCheckedException;
+import Common.FwUtils;
 import Models.Client;
+import Models.IdentityProvider;
+import Models.OAuthTokenObject;
 import Models.OpenIDConnectObject;
 import Models.SharedIdentityObject;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import net.minidev.json.JSONArray;
 import storage.Clients;
+import storage.IdentityProviders;
 import storage.TokenStorage;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.http.HttpServletRequest;
+import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
 import java.util.Map;
+
+import static Common.Constants.getThisIssuer;
+import static Common.FwUtils.getJWKInformation;
 
 public class TokenRequestProcessor {
 
@@ -59,7 +74,9 @@ public class TokenRequestProcessor {
 
         // This is token request
         if ("authorization_code".equals(grant_types[0])) {
-            return processTokenRequest(parameterMap);
+            return processAuthorizationCodeTokenRequest(parameterMap);
+        } else if (("sip_token").equals(grant_types[0])) {
+            return processSIPTokenRequest(parameterMap);
         }
 
         final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
@@ -68,7 +85,7 @@ public class TokenRequestProcessor {
         return objectBuilder.build();
     }
 
-    private static JsonObject processTokenRequest(final Map<String, String[]> parameterMap) {
+    private static JsonObject processAuthorizationCodeTokenRequest(final Map<String, String[]> parameterMap) {
         // Verify auth code
         final String[] codes = parameterMap.get("code");
         if (codes == null || codes.length < 1) {
@@ -112,12 +129,110 @@ public class TokenRequestProcessor {
         return objectBuilder.build();
     }
 
-    private static JsonObject createErrorResponse(final FrameworkCheckedException ex, final String message) {
+    private static JsonObject processSIPTokenRequest(final Map<String, String[]> parameterMap) {
+        // Verify SIP token
+        final String[] token = parameterMap.get("sip_token");
+        if (token == null || token.length < 1) {
+            return createErrorResponse("Missing token grant");
+        }
+
+        final SignedJWT signedJWT;
+
+        try {
+            signedJWT = SignedJWT.parse(token[0]);
+        } catch (ParseException e) {
+            return createErrorResponse("Invalid token received");
+        }
+
+        final JWTClaimsSet jwtClaimsSet;
+        try {
+            jwtClaimsSet = signedJWT.getJWTClaimsSet();
+        } catch (ParseException e) {
+            return createErrorResponse("Invalid token received");
+        }
+
+        final Object istClaim = jwtClaimsSet.getClaim("ist");
+
+        if (istClaim == null || !(istClaim instanceof JSONArray)) {
+            return createErrorResponse("Invalid token received");
+        }
+
+        final JSONArray issuedToList = (JSONArray) istClaim;
+
+        if (!issuedToList.contains(getThisIssuer())) {
+            return createErrorResponse("Token grant cannot be accepted");
+        }
+
+        // Token is issued to us. Now move on to validations
+
+        // Check issuer for registered value
+        final Object iss = jwtClaimsSet.getClaim("iss");
+
+        final IdentityProvider issuedProvider;
+
+        try {
+            issuedProvider = IdentityProviders.getIdentityProvider((String) iss);
+        } catch (FrameworkCheckedException e) {
+            return createErrorResponse(e, "Issuer is not recognised");
+        }
+
+        // Get the discovery and obtain JWK information
+
+        final JsonObject discovery;
+        try {
+            discovery = FwUtils.getDiscoveryDocument(issuedProvider.getProviderDiscovery());
+        } catch (FrameworkCheckedException e) {
+            return createErrorResponse(e, "Error while reading discovery details");
+        }
+
+        final String jwks_uri = discovery.getString("jwks_uri");
+
+        if (jwks_uri == null) {
+            return createErrorResponse("JWK details are not published by token issuer");
+        }
+
+        final JWK issuerJWK;
+
+        try {
+            issuerJWK = getJWKInformation(jwks_uri);
+        } catch (FrameworkCheckedException e) {
+            return createErrorResponse(e, "JWK obtaining failed");
+        }
+
+        final boolean verified;
+        try {
+            verified = signedJWT.verify(new RSASSAVerifier((RSAPublicKey) issuerJWK.getParsedX509CertChain().get(0).getPublicKey()));
+        } catch (JOSEException e) {
+            return createErrorResponse(e, "JWK parsing failed");
+        }
+
+        if (!verified) {
+            return createErrorResponse("Token signature validation error");
+        }
+
+        // Token verified . Create response
+        final String accessToken = FwUtils.getRandomId(15);
+
+        final OAuthTokenObject oAuthTokenObject = new OAuthTokenObject(accessToken);
+
+        TokenStorage.addByAccessToken(oAuthTokenObject.getAccessToken(), oAuthTokenObject);
+
         final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-        objectBuilder.add("Error", message);
-        objectBuilder.add("Cause", ex.getCustomMessage());
-        objectBuilder.add("Details", ex.getMessage());
+        objectBuilder.add("access_token", oAuthTokenObject.getAccessToken());
+        objectBuilder.add("token_type", "Bearer");
+
         return objectBuilder.build();
     }
 
+    private static JsonObject createErrorResponse(final Throwable ex, final String message) {
+        final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        objectBuilder.add("Error", message);
+
+        if (ex instanceof FrameworkCheckedException) {
+            objectBuilder.add("Cause", ((FrameworkCheckedException) ex).getCustomMessage());
+        }
+
+        objectBuilder.add("Details", ex.getMessage());
+        return objectBuilder.build();
+    }
 }

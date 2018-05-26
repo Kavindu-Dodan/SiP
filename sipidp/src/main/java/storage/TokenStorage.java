@@ -35,7 +35,7 @@ public class TokenStorage {
         return tokenObject;
     }
 
-    // For access token based storage
+    // For access token based storage - Which comes after auth code usage
     public static void addByAccessToken(
             final String authCode,
             final String accessToken,
@@ -46,6 +46,14 @@ public class TokenStorage {
             throw new FrameworkCheckedException("Invalid token addition");
         }
 
+        TOKEN_OBJECT_MAP.put(tokenObject.getObjId(), tokenObject);
+        TOKEN_BY_ACCESS_CODE.put(accessToken, tokenObject.getObjId());
+    }
+
+    // SIP based access tokens
+    public static void addByAccessToken(
+            final String accessToken,
+            final TokenObject tokenObject) {
         TOKEN_OBJECT_MAP.put(tokenObject.getObjId(), tokenObject);
         TOKEN_BY_ACCESS_CODE.put(accessToken, tokenObject.getObjId());
     }

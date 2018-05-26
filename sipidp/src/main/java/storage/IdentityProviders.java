@@ -11,6 +11,15 @@ public class IdentityProviders {
 
     private static final Map<String, IdentityProvider> PROVIDER_MAP = new HashMap<>();
 
+    static {
+        final IdentityProvider provider = new IdentityProvider(
+                "My provider",
+                "http://localhost:8080/sip-identity-provider",
+                "http://localhost:8080/sip-identity-provider/.well-known/openid-configuration");
+
+        addProvider(provider);
+    }
+
     public static void addProvider(final IdentityProvider provider) {
         PROVIDER_MAP.put(provider.getProviderUrl(), provider);
     }
