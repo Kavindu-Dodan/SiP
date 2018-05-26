@@ -12,7 +12,12 @@ public class Clients {
     private static final Map<String, Client> CLIENT_MAP = new HashMap<>();
 
     static {
-        Client def = new Client("MyClient", "test", "test", "http://test");
+        Client def =
+                new Client(
+                        "MyClient",
+                        "test_client",
+                        "test_client",
+                        "http://test");
         addClient(def);
     }
 

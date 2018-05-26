@@ -2,17 +2,15 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Login</title>
+    <title>Error</title>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/sip-identity-provider/jsp/css/bootstrap.min.css">
-
-    <title>Document</title>
 </head>
-<body>
+
 
 <div class="container">
     <div class=".container-fluid">

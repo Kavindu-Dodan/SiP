@@ -21,7 +21,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/sip-identity-provider/jsp/css/bootstrap.min.css">
 
-    <title>Document</title>
 </head>
 
 <body>

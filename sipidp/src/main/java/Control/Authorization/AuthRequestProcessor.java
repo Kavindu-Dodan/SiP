@@ -24,7 +24,9 @@ import Common.Exceptions.FrameworkUncheckedException;
 import Common.FwUtils;
 import Common.JWTCreator;
 import Models.Client;
+import Models.IdentityProvider;
 import Models.OpenIDConnectObject;
+import Models.SharedIdentityObject;
 import Models.User;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
@@ -35,16 +37,21 @@ import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 import storage.Clients;
 import storage.EndUsers;
+import storage.IdentityProviders;
 import storage.TokenStorage;
 import storage.UserSessions;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static Common.Constants.getHOST;
+import static Common.Constants.getIdentityShareScope;
 import static java.lang.String.format;
 
 public class AuthRequestProcessor {
@@ -83,20 +90,13 @@ public class AuthRequestProcessor {
             throw new FrameworkUncheckedException("Failed to pass the Authorization request", e);
         }
 
-        // This is needed for different flows
-        final ResponseType responseType = authRequest.getResponseType();
+        final Client client;
 
-        if (responseType.impliesCodeFlow()) {
-            return processForAuthorizationCodeFlow(authRequest, request);
-        } else {
-            throw new FrameworkUncheckedException("Unsupported response type");
+        try {
+            client = Clients.getClientOnId(authRequest.getClientID().getValue());
+        } catch (FrameworkCheckedException e) {
+            throw new FrameworkUncheckedException("Client not found", e);
         }
-
-    }
-
-    private static AuthenticationResponse processForAuthorizationCodeFlow(
-            final AuthenticationRequest authRequest,
-            final HttpServletRequest request) {
 
         final User user;
 
@@ -107,35 +107,54 @@ public class AuthRequestProcessor {
             throw new FrameworkUncheckedException("Client not found", e);
         }
 
-
         final String iss =
                 format("http://%s:%s%s",
-                        request.getRemoteHost(),
+                        getHOST(),
                         request.getLocalPort(),
                         Constants.getContextRoot());
 
-        final Map<String, Object> claimMap = new HashMap<>();
+        // This is needed for different flows
+        final ResponseType responseType = authRequest.getResponseType();
 
-        claimMap.put("sub", user.getUsername());
-        claimMap.put("iss", iss);
-        claimMap.put("email", user.getEmail());
-        claimMap.put("Age", user.getAge());
-
-        final SignedJWT jwt;
-        try {
-            jwt = JWTCreator.createJWT(claimMap);
-        } catch (FrameworkCheckedException e) {
-            throw new FrameworkUncheckedException("Something went wrong", e);
+        if (responseType.impliesCodeFlow()) {
+            return processForAuthorizationCodeFlow(authRequest, client, user, iss);
+        } else {
+            throw new FrameworkUncheckedException("Unsupported response type");
         }
+
+    }
+
+    private static AuthenticationResponse processForAuthorizationCodeFlow(
+            final AuthenticationRequest authRequest,
+            final Client client,
+            final User user,
+            final String issuer) {
+
+        // This is common for any scenario
+        final String authCode = FwUtils.getRandomId(15);
+        final String accessToken = FwUtils.getRandomId(15);
 
         // This is needed for SIP
         final List<String> scopeValues = authRequest.getScope().toStringList();
 
-        final String authCode = FwUtils.getRandomId(15);
-        final String accessToken = FwUtils.getRandomId(15);
-        final String idToken = jwt.serialize();
+        final OpenIDConnectObject openIDConnectObject;
 
-        final OpenIDConnectObject openIDConnectObject = new OpenIDConnectObject(authCode, accessToken, idToken);
+        if (scopeValues.contains(getIdentityShareScope())) {
+            openIDConnectObject =
+                    new SharedIdentityObject(
+                            authCode,
+                            accessToken,
+                            getIdTokenForRequest(issuer, user, client).serialize(),
+                            getSIPTokenForRequest(issuer, user, client).serialize()
+                    );
+        } else {
+            openIDConnectObject =
+                    new OpenIDConnectObject(
+                            authCode,
+                            accessToken,
+                            getIdTokenForRequest(issuer, user, client).serialize()
+                    );
+        }
 
         TokenStorage.addByAuthCode(authCode, openIDConnectObject);
 
@@ -148,4 +167,76 @@ public class AuthRequestProcessor {
                 null,
                 authRequest.getResponseMode());
     }
+
+    private static SignedJWT getIdTokenForRequest(
+            final String issuer,
+            final User loggedInUser,
+            final Client client) {
+        final Map<String, Object> idTokenClaims = new HashMap<>();
+
+        idTokenClaims.put("aud", client.getClientId());
+        idTokenClaims.put("sub", loggedInUser.getUsername());
+        idTokenClaims.put("iss", issuer);
+        idTokenClaims.put("email", loggedInUser.getEmail());
+        idTokenClaims.put("Age", loggedInUser.getAge());
+
+        // Time related claims
+        final long currentTimeStamp = FwUtils.getCurrentTimeStamp();
+        idTokenClaims.put("iat", currentTimeStamp);
+        idTokenClaims.put("exp", FwUtils.getTokenExpiringTimeStamp(currentTimeStamp));
+
+        final SignedJWT idToken;
+        try {
+            idToken = JWTCreator.createJWT(idTokenClaims);
+        } catch (FrameworkCheckedException e) {
+            throw new FrameworkUncheckedException("Something went wrong", e);
+        }
+
+        return idToken;
+    }
+
+    private static SignedJWT getSIPTokenForRequest(
+            final String issuer,
+            final User loggedInUser,
+            final Client client) {
+
+        final Map<String, Object> sipTOken = new HashMap<>();
+
+        sipTOken.put("aud", client.getClientId());
+        sipTOken.put("sub", loggedInUser.getUsername());
+        sipTOken.put("iss", issuer);
+
+        // Subject related information
+        final Map<String, Object> subClaims = new HashMap<>();
+        subClaims.put("email", loggedInUser.getEmail());
+        subClaims.put("Age", loggedInUser.getAge());
+
+        sipTOken.put("sdata", subClaims);
+
+        // Time related claims
+        final long currentTimeStamp = FwUtils.getCurrentTimeStamp();
+        sipTOken.put("iat", currentTimeStamp);
+        sipTOken.put("exp", FwUtils.getTokenExpiringTimeStamp(currentTimeStamp));
+
+        final Collection<IdentityProvider> providerList = IdentityProviders.getProviderList();
+
+        final List<String> registeredProviders = new ArrayList<>();
+
+        providerList.forEach(
+                provider -> registeredProviders.add(provider.getProviderUrl())
+
+        );
+
+        sipTOken.put("ist", registeredProviders.toArray());
+
+        final SignedJWT sipToken;
+        try {
+            sipToken = JWTCreator.createJWT(sipTOken);
+        } catch (FrameworkCheckedException e) {
+            throw new FrameworkUncheckedException("Something went wrong", e);
+        }
+
+        return sipToken;
+    }
+
 }

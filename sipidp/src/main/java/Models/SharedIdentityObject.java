@@ -4,11 +4,11 @@ public class SharedIdentityObject extends OpenIDConnectObject {
 
     private final String sharedIdentityToken;
 
-    public SharedIdentityObject(final String accessToken,
-                                final String authCode,
+    public SharedIdentityObject(final String authCode,
+                                final String accessToken,
                                 final String idToken,
                                 final String sharedIdentityToken) {
-        super(accessToken, authCode, idToken);
+        super(authCode, accessToken, idToken);
         this.sharedIdentityToken = sharedIdentityToken;
     }
 

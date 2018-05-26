@@ -1,8 +1,10 @@
 package Control.Token;
 
 import Common.Exceptions.FrameworkCheckedException;
+import Models.Client;
 import Models.OpenIDConnectObject;
 import Models.SharedIdentityObject;
+import storage.Clients;
 import storage.TokenStorage;
 
 import javax.json.Json;
@@ -17,9 +19,37 @@ public class TokenRequestProcessor {
     }
 
     public static JsonObject processRequest(final HttpServletRequest request) {
-        /// TODO: 5/13/2018 Do client authentication/assertion
-
         final Map<String, String[]> parameterMap = request.getParameterMap();
+
+        // Verify client authentication
+        final String[] clientId = parameterMap.get("client_id");
+        if (clientId == null || clientId.length < 1) {
+            return createErrorResponse("Missing client grants");
+        }
+
+        final Client client;
+
+        try {
+            client = Clients.getClientOnId(clientId[0]);
+        } catch (FrameworkCheckedException e) {
+            return createErrorResponse("Invalid client grants");
+        }
+
+        final String[] redirectUrl = parameterMap.get("redirect_url");
+        if (redirectUrl == null || redirectUrl.length < 1) {
+            return createErrorResponse("Missing client grants");
+        }
+
+        final String[] clientSecret = parameterMap.get("client_secret");
+        if (clientSecret == null || clientSecret.length < 1) {
+            return createErrorResponse("Missing client grants");
+        }
+
+        if (!(client.authenticate(clientSecret[0])
+                && client.getRedirectUrl().equals(redirectUrl[0]))) {
+            return createErrorResponse("Invalid client grants");
+        }
+
 
         // Grant type - grant_type
         final String[] grant_types = parameterMap.get("grant_type");

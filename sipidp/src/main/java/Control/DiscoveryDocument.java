@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static Common.Constants.getHOST;
+
 @WebServlet(urlPatterns = "/.well-known/openid-configuration")
 public class DiscoveryDocument extends HttpServlet {
 
@@ -21,9 +23,8 @@ public class DiscoveryDocument extends HttpServlet {
         final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
         final int localPort = req.getLocalPort();
-        final String remoteHost = req.getRemoteHost();
 
-        final String hostPort = "http://" + remoteHost + ":" + localPort;
+        final String hostPort = "http://" + getHOST() + ":" + localPort;
         final String issuer = hostPort + Constants.getContextRoot();
 
         objectBuilder.add("issuer", issuer);

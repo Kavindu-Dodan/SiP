@@ -10,6 +10,7 @@ import java.time.ZoneOffset;
 import java.util.Base64;
 import java.util.List;
 
+import static Common.Constants.getTokenValidity;
 import static java.lang.String.format;
 
 public class FwUtils {
@@ -35,6 +36,10 @@ public class FwUtils {
 
     public static long getCurrentTimeStamp() {
         return LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+    }
+
+    public static long getTokenExpiringTimeStamp(final long startFrom) {
+        return startFrom + getTokenValidity();
     }
 
     public static boolean isBasicAuth(final String headerValue) {
@@ -95,7 +100,6 @@ public class FwUtils {
                 "    <!-- Bootstrap CSS -->\n" +
                 "    <link rel=\"stylesheet\" href=\"/sip-identity-provider/jsp/css/bootstrap.min.css\">\n" +
                 "\n" +
-                "    <title>Document</title>\n" +
                 "</head>\n" +
                 "<body>", title));
 

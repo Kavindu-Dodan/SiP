@@ -12,8 +12,11 @@ public class EndUsers {
     private static final Map<String, User> USER_MAP = new HashMap<>();
 
     static {
-        USER_MAP.put("admin", new User("admin", "admin"));
-        USER_MAP.put("test", new User("test", "test"));
+        final User user = new User("alex", "alex");
+        user.setEmail("alex@abc.com");
+        user.setAge(30);
+
+        addNewUser(user);
     }
 
     private EndUsers() {
