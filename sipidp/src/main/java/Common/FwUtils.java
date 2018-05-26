@@ -84,19 +84,32 @@ public class FwUtils {
             final String title,
             final List<String> columnHeaders) throws IOException {
 
-        outputStream.println("<html>");
-        outputStream.println("<head>");
-        outputStream.println("<style>\n" +
-                "table, th, td {\n" +
-                "    border: 1px solid black;\n" +
-                "}\n" +
-                "</style>");
-        outputStream.println("</head>");
-        outputStream.println("<body>");
+        outputStream.println(format("<!doctype html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <title>%s</title>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\"\n" +
+                "          content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">\n" +
+                "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" +
+                "    <!-- Bootstrap CSS -->\n" +
+                "    <link rel=\"stylesheet\" href=\"/sip-identity-provider/jsp/css/bootstrap.min.css\">\n" +
+                "\n" +
+                "    <title>Document</title>\n" +
+                "</head>\n" +
+                "<body>", title));
 
-        outputStream.println("<table style=\"width:100%\">");
-        outputStream.println(format("<h1>%s</h1>", title));
+        outputStream.println("<div class=\"container\">\n");
 
+        outputStream.println(format("<div class=\".container-fluid\">" +
+                "        <br>" +
+                "        <h2>%s</h2>" +
+                "        <br>" +
+                "    </div>", title));
+
+        outputStream.println("<table class=\"table\">");
+
+        outputStream.println("<thead  class=\"thead-light\">");
         outputStream.println("<tr>");
         columnHeaders.forEach(
                 header -> {
@@ -108,11 +121,16 @@ public class FwUtils {
                 }
         );
         outputStream.println("</tr>");
+        outputStream.println("</thead>");
 
     }
 
     public static void addHtmlFooter(final ServletOutputStream outputStream) throws IOException {
         outputStream.println("</table>");
+
+        outputStream.println("<a class=\"btn btn-info\" href=\"/sip-identity-provider/admin\" role=\"button\">To Admin Page</a>");
+
+        outputStream.println("</div>");
         outputStream.println("</body>");
         outputStream.println("</html>");
     }

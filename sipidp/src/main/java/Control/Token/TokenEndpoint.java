@@ -35,6 +35,7 @@ public class TokenEndpoint extends HttpServlet {
 
         final ServletOutputStream outputStream = resp.getOutputStream();
         outputStream.print(jsonObject.toString());
+        resp.setHeader("Content-Type", "application/json");
         outputStream.flush();
     }
 }

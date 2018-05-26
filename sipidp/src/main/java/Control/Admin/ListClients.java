@@ -25,7 +25,7 @@ public class ListClients extends HttpServlet {
         FwUtils.addHtmlHeaderWithTitle(
                 outputStream,
                 "Registered client applications",
-                Arrays.asList("Client name", "Client ID", "Client redirect URL"));
+                Arrays.asList("Client name", "Client ID", "Client redirect URL", "Client secret"));
 
         Clients.getClients().forEach(
                 client -> {
@@ -35,6 +35,7 @@ public class ListClients extends HttpServlet {
                         outputStream.println(format("<td>%s</td>", client.getClientName()));
                         outputStream.println(format("<td>%s</td>", client.getClientId()));
                         outputStream.println(format("<td>%s</td>", client.getRedirectUrl()));
+                        outputStream.println(format("<td>%s</td>", client.getClientPassword()));
 
                         outputStream.println("</tr>");
                     } catch (IOException e) {

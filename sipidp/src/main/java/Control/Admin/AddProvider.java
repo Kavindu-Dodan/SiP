@@ -31,6 +31,6 @@ public class AddProvider extends HttpServlet {
 
         ServletOutputStream outputStream = resp.getOutputStream();
 
-        outputStream.println("Identity provider added successfully");
+        resp.sendRedirect("/sip-identity-provider/admin/ListProviders");
     }
 }

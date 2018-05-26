@@ -29,4 +29,8 @@ public class Client {
     public String getClientName() {
         return clientName;
     }
+
+    public String getClientPassword() {
+        return clientPassword;
+    }
 }

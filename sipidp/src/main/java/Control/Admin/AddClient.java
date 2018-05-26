@@ -32,11 +32,7 @@ public class AddClient extends HttpServlet {
 
         Clients.addClient(new Client(name, id, password, redirectUrl));
 
-        ServletOutputStream outputStream = resp.getOutputStream();
-
-        outputStream.println("Client added successfully");
-        outputStream.println(format("Client identifier : %s", id));
-        outputStream.println(format("Client password : %s", password));
+        resp.sendRedirect("/sip-identity-provider/admin/ListClients");
     }
 
 }

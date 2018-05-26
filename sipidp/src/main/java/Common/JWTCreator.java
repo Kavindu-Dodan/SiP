@@ -15,7 +15,7 @@ public class JWTCreator {
     private JWTCreator() {
     }
 
-    public static SignedJWT createJWT(final Map<String, String> claims) throws FrameworkCheckedException {
+    public static SignedJWT createJWT(final Map<String, Object> claims) throws FrameworkCheckedException {
         final JWSHeader jwsHeader = new JWSHeader.Builder(JWSAlgorithm.RS256).build();
 
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();

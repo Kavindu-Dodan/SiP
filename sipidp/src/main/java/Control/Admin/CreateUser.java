@@ -32,6 +32,6 @@ public class CreateUser extends HttpServlet {
 
         EndUsers.addNewUser(newUser);
 
-        resp.getOutputStream().print("User added successfully");
+        resp.sendRedirect("/sip-identity-provider/admin/ListUsers");
     }
 }

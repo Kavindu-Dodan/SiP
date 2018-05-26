@@ -1,28 +1,58 @@
 <%@ page import="Common.Constants" %>
-<!DOCTYPE>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>
-        Login Page
-    </title>
+    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/sip-identity-provider/jsp/css/bootstrap.min.css">
+
+    <title>Document</title>
 </head>
-
 <body>
-<p> Please login to continue.</p>
 
-<form method="post" action="<%out.println(request.getContextPath()+"/Login?"+ request.getQueryString());%>">
-    <label>Username : </label><input name="<%out.print(Constants.getUsernameField());%>" type="text"><br>
-    <label>Password : </label> <input name="<%out.print(Constants.getPasswordField());%>" type="password"><br>
+<div class="container">
+    <div class=".container-fluid">
+        <br>
+        <h2>Please login to continue</h2>
+        <br>
+    </div>
 
-    <input type="submit" value="Login"><br>
+    <form method="post" action="<%out.println(request.getContextPath()+"/Login?"+ request.getQueryString());%>">
+        <div class="form-group">
+            <div class="col-5">
+                <label for="userName">Username</label>
+                <input type="text" class="form-control" name="<%out.print(Constants.getUsernameField());%>"
+                       id="userName" placeholder="User name">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-5">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="<%out.print(Constants.getPasswordField());%>"
+                       id="password" placeholder="Password">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-5">
+                <input type="submit" class="btn btn-primary" name="<%out.print(Constants.getAddUserFiled());%>">
+            </div>
+        </div>
+    </form>
 
     <%
         if (request.getAttribute(Constants.getInvalidCredentialsField()) != null) {
     %>
-            <label><%out.print(request.getAttribute(Constants.getInvalidCredentialsField()));%></label>
+    <label><%out.print(request.getAttribute(Constants.getInvalidCredentialsField()));%></label>
     <%
         }
     %>
-</form>
+</div>
+
+<script src="/sip-identity-provider/jsp//js/bootstrap.min.js"></script>
+
 </body>
 </html>

@@ -114,11 +114,12 @@ public class AuthRequestProcessor {
                         request.getLocalPort(),
                         Constants.getContextRoot());
 
-        final Map<String, String> claimMap = new HashMap<>();
+        final Map<String, Object> claimMap = new HashMap<>();
 
         claimMap.put("sub", user.getUsername());
         claimMap.put("iss", iss);
         claimMap.put("email", user.getEmail());
+        claimMap.put("Age", user.getAge());
 
         final SignedJWT jwt;
         try {
