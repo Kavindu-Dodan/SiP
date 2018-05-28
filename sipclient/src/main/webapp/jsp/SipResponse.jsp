@@ -33,7 +33,7 @@
         <h4>SIP response</h4>
         <br>
         <textarea class="form-control" id="sip">
-            SIP response :  <%out.print(request.getAttribute("sipResponse"));%>
+             <%out.print(request.getAttribute("sipResponse"));%>
         </textarea>
     </div>
 
