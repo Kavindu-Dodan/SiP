@@ -16,22 +16,6 @@
         <finalName>sip-identity-provider</finalName>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>5.61</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>1.1.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-    </dependencies>
-
     <profiles>
         <profile>
             <id>wfdeploy</id>
@@ -54,6 +38,7 @@
                         <configuration>
                             <filename>${project.build.finalName}.${project.packaging}</filename>
                             <hostname>localhost</hostname>
+                            <!--<port>10190</port>-->
                             <port>9990</port>
                             <username>admin</username>
                             <password>password</password>

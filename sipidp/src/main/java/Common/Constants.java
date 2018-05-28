@@ -13,6 +13,11 @@ public class Constants {
     private static final String THIS_ISSUER =
             format("http://%s:%s%s", getHOST(), getPORT(), getContextRoot());
 
+    private static final String DISCOVERY_ENDPOINT = "/.well-known/openid-configuration";
+
+    private static final String AUTHORIZARION_ENDPOINT = "/authorization";
+    private static final String TOKEN_ENDPOINT = "/Token";
+
     private static final String USERNAME_FIELD = "username";
     private static final String PASSWORD_FIELD = "password";
     private static final String CONSENT_FIELD = "consent_grant";
@@ -34,6 +39,18 @@ public class Constants {
 
     public static String getThisIssuer() {
         return THIS_ISSUER;
+    }
+
+    public static String getAuthorizarionEndpoint() {
+        return AUTHORIZARION_ENDPOINT;
+    }
+
+    public static String getTokenEndpoint() {
+        return TOKEN_ENDPOINT;
+    }
+
+    public static String getDiscoveryEndpoint() {
+        return DISCOVERY_ENDPOINT;
     }
 
     public static String getIdentityShareScope() {

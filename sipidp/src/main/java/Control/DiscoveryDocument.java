@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static Common.Constants.getAuthorizarionEndpoint;
 import static Common.Constants.getThisIssuer;
+import static Common.Constants.getTokenEndpoint;
 
 @WebServlet(urlPatterns = "/.well-known/openid-configuration")
 public class DiscoveryDocument extends HttpServlet {
@@ -21,6 +23,8 @@ public class DiscoveryDocument extends HttpServlet {
         final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
         objectBuilder.add("issuer", getThisIssuer());
+        objectBuilder.add("authorization_endpoint", getThisIssuer() + getAuthorizarionEndpoint());
+        objectBuilder.add("token_endpoint", getThisIssuer() + getTokenEndpoint());
         objectBuilder.add("jwks_uri", getThisIssuer() + "/openid-configuration/jwks_uri");
         objectBuilder.add("introspection_uri", getThisIssuer() + "/validations/token/introspect");
         outputStream.print(objectBuilder.build().toString());

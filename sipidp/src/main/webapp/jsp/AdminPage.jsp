@@ -1,4 +1,4 @@
-<%--
+<%@ page import="Common.Constants" %><%--
   Created by IntelliJ IDEA.
   User: kadolk
   Date: 5/21/2018
@@ -24,6 +24,8 @@
     <div class=".container-fluid">
         <br>
         <h2>List of admin functions</h2>
+        <br>
+        <h5><a href="<%out.print(Constants.getThisIssuer() + Constants.getDiscoveryEndpoint());%>">Discovery Document</a></h5>
         <br>
     </div>
 
