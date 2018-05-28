@@ -10,21 +10,22 @@ import java.io.IOException;
 
 import static java.lang.String.format;
 
-@WebServlet(urlPatterns = "/clientToken")
-public class ClientTokenRequest extends HttpServlet {
+@WebServlet(urlPatterns = "/clientSip")
+public class clientSIPRequest extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final String authCode = req.getParameter("authCode");
+        final String sipToken = req.getParameter("sipToken");
         final String clientID = req.getParameter("clientID");
         final String tokenEndpoint = req.getParameter("tokenEndpoint");
         final String clientSecret = req.getParameter("clientSecret");
         final String redirectURL = req.getParameter("redirectURL");
 
-        final String grantType = "authorization_code";
 
-        final String input = format("code=%s&grant_type=%s&client_id=%s&redirect_url=%s&client_secret=%s",
-                authCode,
+        final String grantType = "sip_token";
+
+        final String input = format("sip_token=%s&grant_type=%s&client_id=%s&redirect_url=%s&client_secret=%s",
+                sipToken,
                 grantType,
                 clientID,
                 redirectURL,
@@ -32,11 +33,8 @@ public class ClientTokenRequest extends HttpServlet {
 
         JsonObject post = Utils.getJsonResponseFromURL(tokenEndpoint, input, "POST");
 
-        Utils.setTokenResponse(post.toString());
+        req.setAttribute("sipResponse", post.toString());
 
-
-        req.setAttribute("tokenResponseJson", post);
-
-        req.getRequestDispatcher("/jsp/TokenResponse.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/SipResponse.jsp").forward(req, resp);
     }
 }

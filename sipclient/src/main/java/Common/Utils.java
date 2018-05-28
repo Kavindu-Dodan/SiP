@@ -12,9 +12,18 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
 
 public class Utils {
+
+    private static String tokenResponse = null;
+
+    public static void setTokenResponse(final String tokenResponse) {
+        Utils.tokenResponse = tokenResponse;
+    }
+
+    public static String getTokenResponse() {
+        return tokenResponse;
+    }
 
     public static JsonObject getJsonResponseFromURL(
             final String URL,

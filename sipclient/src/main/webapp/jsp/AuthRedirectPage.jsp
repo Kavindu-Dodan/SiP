@@ -52,6 +52,14 @@
         </div>
         <div class="form-group">
             <div class="col-5">
+                <label for="redirectURL">Redirect URL</label>
+                <input type="text" class="form-control"
+                       id="redirectURL" name="redirectURL"
+                       value="<%out.println(Constants.getMyContextPath() + Constants.getRedirectEndpoint());%>">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-5">
                 <input type="submit" class="btn btn-primary" name="">
             </div>
         </div>
