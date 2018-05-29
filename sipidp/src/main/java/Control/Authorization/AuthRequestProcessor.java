@@ -173,7 +173,7 @@ public class AuthRequestProcessor {
         idTokenClaims.put("sub", loggedInUser.getUsername());
         idTokenClaims.put("iss", issuer);
         idTokenClaims.put("email", loggedInUser.getEmail());
-        idTokenClaims.put("Age", loggedInUser.getAge());
+        idTokenClaims.put("age", loggedInUser.getAge());
 
         // Time related claims
         final long currentTimeStamp = FwUtils.getCurrentTimeStamp();
@@ -204,7 +204,7 @@ public class AuthRequestProcessor {
         // Subject related information
         final Map<String, Object> subClaims = new HashMap<>();
         subClaims.put("email", loggedInUser.getEmail());
-        subClaims.put("Age", loggedInUser.getAge());
+        subClaims.put("age", loggedInUser.getAge());
 
         sipTOken.put("sdata", subClaims);
 

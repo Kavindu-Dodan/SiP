@@ -71,10 +71,6 @@
             <div class="col-5">
                 <input type="submit" value="Accept" class="btn btn-primary"
                        name="<%out.print(Constants.getConsentField());%>">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-5">
                 <input type="submit" value="Decline" class="btn btn-primary"
                        name="<%out.print(Constants.getConsentField());%>">
             </div>

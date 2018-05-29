@@ -25,13 +25,14 @@
         <br>
         <h2>List of admin functions</h2>
         <br>
-        <h5><a href="<%out.print(Constants.getThisIssuer() + Constants.getDiscoveryEndpoint());%>">Discovery Document</a></h5>
+        <h5><a href="<%out.print(Constants.getThisIssuer() + Constants.getDiscoveryEndpoint());%>">Discovery
+            Document</a></h5>
         <br>
     </div>
 
     <div class=".container-fluid">
         <h3>End user related functionality</h3>
-
+        <br>
         <div class="row">
             <div class="col-3">
                 <a class="btn btn-primary" href="/sip-identity-provider/admin/createUser" role="button">Add User</a>
@@ -69,6 +70,17 @@
             <div class="col-3">
                 <a class="btn btn-primary" href="/sip-identity-provider/admin/ListProviders" role="button">List Identity
                     Provider</a>
+            </div>
+        </div>
+        <div class="row"><br></div>
+    </div>
+    <div class=".container-fluid">
+        <h3>Users provisioned by SIP tokens</h3>
+        <br>
+        <div class="row">
+            <div class="col-3">
+                <a class="btn btn-primary" href="/sip-identity-provider/admin/ListSIPUsers" role="button">List SIP
+                    users</a>
             </div>
         </div>
         <div class="row"><br></div>

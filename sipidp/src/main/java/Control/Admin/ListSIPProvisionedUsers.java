@@ -2,10 +2,8 @@ package Control.Admin;
 
 import Common.Exceptions.FrameworkUncheckedException;
 import Common.FwUtils;
-import Models.User;
-import storage.EndUsers;
+import storage.SipUserStorage;
 
-import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,27 +14,27 @@ import java.util.Arrays;
 
 import static java.lang.String.format;
 
-@WebServlet(urlPatterns = "/admin/ListUsers")
-public class ListUsers extends HttpServlet {
+@WebServlet(urlPatterns = "/admin/ListSIPUsers")
+public class ListSIPProvisionedUsers extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final ServletOutputStream outputStream = resp.getOutputStream();
 
         FwUtils.addHtmlHeaderWithTitle(
                 outputStream,
-                "Registered end users",
-                Arrays.asList("Username", "Email", "Age"));
+                "Users received through SIP tokens",
+                Arrays.asList("Username", "Email", "Age", "Issuer"));
 
-
-        EndUsers.getUsers().forEach(
-                user -> {
+        SipUserStorage.getSipUsers().forEach(
+                sipUser -> {
                     try {
                         outputStream.println("<tr>");
 
-                        outputStream.println(format("<td>%s</td>", user.getUsername()));
-                        outputStream.println(format("<td>%s</td>", user.getEmail()));
-                        outputStream.println(format("<td>%s</td>", user.getAge()));
+                        outputStream.println(format("<td>%s</td>", sipUser.getUsername()));
+                        outputStream.println(format("<td>%s</td>", sipUser.getEmail()));
+                        outputStream.println(format("<td>%s</td>", sipUser.getAge()));
+                        outputStream.println(format("<td>%s</td>", sipUser.getIssuer()));
 
                         outputStream.println("</tr>");
 

@@ -27,6 +27,7 @@ public class DiscoveryDocument extends HttpServlet {
         objectBuilder.add("token_endpoint", getThisIssuer() + getTokenEndpoint());
         objectBuilder.add("jwks_uri", getThisIssuer() + "/openid-configuration/jwks_uri");
         objectBuilder.add("introspection_uri", getThisIssuer() + "/validations/token/introspect");
+        objectBuilder.add("user_info_endpoint", getThisIssuer() + "/validations/userinfo");
         outputStream.print(objectBuilder.build().toString());
     }
 }

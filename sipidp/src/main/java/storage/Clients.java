@@ -17,7 +17,7 @@ public class Clients {
                         "MyClient",
                         "test_client",
                         "test_client",
-                        "http://test");
+                        "http://localhost:8080/sip-client/redirect");
         addClient(def);
     }
 

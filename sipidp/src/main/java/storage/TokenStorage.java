@@ -62,4 +62,14 @@ public class TokenStorage {
     public static boolean verifyAccessToken(final String accessToken) {
         return TOKEN_BY_ACCESS_CODE.containsKey(accessToken);
     }
+
+    // For user info requests
+
+    public static TokenObject getTokenByAccessCode(final String accessToken) throws FrameworkCheckedException {
+        // verify storage
+        if (!TOKEN_BY_ACCESS_CODE.containsKey(accessToken)) {
+            throw new FrameworkCheckedException("Invalid access token");
+        }
+        return TOKEN_OBJECT_MAP.get(TOKEN_BY_ACCESS_CODE.get(accessToken));
+    }
 }

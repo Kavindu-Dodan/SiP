@@ -4,17 +4,21 @@ import Common.Exceptions.FrameworkCheckedException;
 import Common.FwUtils;
 import Models.Client;
 import Models.IdentityProvider;
-import Models.OAuthTokenObject;
+import Models.SipUser;
+import Models.TokenObjectForSIPGrant;
 import Models.OpenIDConnectObject;
 import Models.SharedIdentityObject;
+import Models.User;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import storage.Clients;
 import storage.IdentityProviders;
+import storage.SipUserStorage;
 import storage.TokenStorage;
 
 import javax.json.Json;
@@ -23,6 +27,7 @@ import javax.json.JsonObjectBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static Common.Constants.getThisIssuer;
@@ -210,15 +215,37 @@ public class TokenRequestProcessor {
             return createErrorResponse("Token signature validation error");
         }
 
+        // Store SIP claims about end user
+        final String sub = (String) jwtClaimsSet.getClaim("sub");
+
+        final JSONObject sdata = (JSONObject) jwtClaimsSet.getClaim("sdata");
+        final String email = sdata.getAsString("email");
+        final Long age = (Long) sdata.getAsNumber("age");
+
+        // Storing for admin purpose
+        final SipUser sipUser = new SipUser(sub, (String) iss);
+        sipUser.setAge(age.intValue());
+        sipUser.setEmail(email);
+
+        SipUserStorage.addNewUser(sipUser);
+
+        final HashMap<String, Object> stringObjectHashMap = new HashMap<>();
+
+        stringObjectHashMap.put("sub", sub);
+        stringObjectHashMap.put("email", email);
+        stringObjectHashMap.put("age", age);
+
         // Token verified . Create response
         final String accessToken = FwUtils.getRandomId(15);
 
-        final OAuthTokenObject oAuthTokenObject = new OAuthTokenObject(accessToken);
+        final TokenObjectForSIPGrant tokenObjectForSIPGrant = new TokenObjectForSIPGrant(accessToken);
 
-        TokenStorage.addByAccessToken(oAuthTokenObject.getAccessToken(), oAuthTokenObject);
+        tokenObjectForSIPGrant.setSipClaims(stringObjectHashMap);
+
+        TokenStorage.addByAccessToken(tokenObjectForSIPGrant.getAccessToken(), tokenObjectForSIPGrant);
 
         final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-        objectBuilder.add("access_token", oAuthTokenObject.getAccessToken());
+        objectBuilder.add("access_token", tokenObjectForSIPGrant.getAccessToken());
         objectBuilder.add("token_type", "Bearer");
 
         return objectBuilder.build();
