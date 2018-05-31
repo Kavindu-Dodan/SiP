@@ -23,18 +23,14 @@
         <br>
         <h4>Token response</h4>
         <br>
-        <textarea class="form-control" id="token">
-           <%out.print(Utils.getTokenResponse());%>
-        </textarea>
+        <textarea class="form-control" id="token"><%out.print(Utils.getTokenResponse());%></textarea>
     </div>
 
     <div class=".container-fluid">
         <br>
         <h4>SIP response</h4>
         <br>
-        <textarea class="form-control" id="sip">
-            <%out.print(request.getAttribute("sipResponse"));%>
-        </textarea>
+        <textarea class="form-control" id="sip"><%out.print(Utils.getSipResponse());%></textarea>
     </div>
 
 </div>

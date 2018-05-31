@@ -17,6 +17,16 @@ public class Utils {
 
     private static String tokenResponse = null;
 
+    private static String sipResponse = null;
+
+    public static String getSipResponse() {
+        return sipResponse;
+    }
+
+    public static void setSipResponse(String sipResponse) {
+        Utils.sipResponse = sipResponse;
+    }
+
     public static void setTokenResponse(final String tokenResponse) {
         Utils.tokenResponse = tokenResponse;
     }

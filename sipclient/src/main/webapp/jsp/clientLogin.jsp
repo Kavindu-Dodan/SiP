@@ -1,4 +1,5 @@
 <%@ page import="Common.Constants" %>
+<%@ page import="Common.Configurations" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -24,14 +25,16 @@
             <div class="col-5">
                 <label for="authorizationEndpoint">Authorization endpoint</label>
                 <input type="text" class="form-control"
-                       id="authorizationEndpoint" placeholder="Auth endpoint" name="authorizationEndpoint">
+                       id="authorizationEndpoint" placeholder="Auth endpoint" name="authorizationEndpoint"
+                       value="<%out.println(Configurations.getAuthEndpointForIdToken());%>">
             </div>
         </div>
         <div class="form-group">
             <div class="col-5">
                 <label for="clientID">Client ID</label>
                 <input type="text" class="form-control"
-                       id="clientID" placeholder="Client ID" name="clientID">
+                       id="clientID" placeholder="Client ID" name="clientID"
+                       value="<%out.println(Configurations.getClientIdForIdToken());%>">
             </div>
         </div>
         <div class="form-group">
@@ -44,7 +47,7 @@
         </div>
         <div class="form-group">
             <div class="col-5">
-                <input type="submit" class="btn btn-primary" name="">
+                <input type="submit" class="btn btn-primary" value="Obtain Auth Code">
             </div>
         </div>
     </form>

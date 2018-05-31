@@ -1,4 +1,5 @@
 <%@ page import="Common.Constants" %>
+<%@ page import="Common.Configurations" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -26,28 +27,32 @@
             <div class="col-5">
                 <label for="authCode">Auth code</label>
                 <input type="text" class="form-control"
-                       id="authCode" placeholder="Auth code" name="authCode">
+                       id="authCode" placeholder="Auth code" name="authCode"
+                       value="<%out.print(request.getParameter("code"));%>">
             </div>
         </div>
         <div class="form-group">
             <div class="col-5">
                 <label for="clientID">Client ID</label>
                 <input type="text" class="form-control"
-                       id="clientID" placeholder="Client ID" name="clientID">
+                       id="clientID" placeholder="Client ID" name="clientID"
+                       value="<%out.println(Configurations.getClientIdForIdToken());%>">
             </div>
         </div>
         <div class="form-group">
             <div class="col-5">
                 <label for="tokenEndpoint">Token endpoint URL</label>
                 <input type="text" class="form-control"
-                       id="tokenEndpoint" name="tokenEndpoint" placeholder="Token endpoint">
+                       id="tokenEndpoint" name="tokenEndpoint" placeholder="Token endpoint"
+                       value="<%out.println(Configurations.getTokenEndpointForIdToken());%>">
             </div>
         </div>
         <div class="form-group">
             <div class="col-5">
                 <label for="clientSecret">Client secret</label>
                 <input type="text" class="form-control"
-                       id="clientSecret" name="clientSecret" placeholder="Client Secret">
+                       id="clientSecret" name="clientSecret" placeholder="Client Secret"
+                       value="<%out.println(Configurations.getClientSecretForIdToken());%>">
             </div>
         </div>
         <div class="form-group">
@@ -60,7 +65,7 @@
         </div>
         <div class="form-group">
             <div class="col-5">
-                <input type="submit" class="btn btn-primary" name="">
+                <input type="submit" class="btn btn-primary" value="Obtain tokens">
             </div>
         </div>
     </form>

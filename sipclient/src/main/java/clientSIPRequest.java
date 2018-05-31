@@ -14,6 +14,11 @@ import static java.lang.String.format;
 public class clientSIPRequest extends HttpServlet {
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/jsp/SipResponse.jsp").forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final String sipToken = req.getParameter("sipToken");
         final String clientID = req.getParameter("clientID");
@@ -33,7 +38,7 @@ public class clientSIPRequest extends HttpServlet {
 
         JsonObject post = Utils.getJsonResponseFromURL(tokenEndpoint, input, "POST");
 
-        req.setAttribute("sipResponse", post.toString());
+        Utils.setSipResponse(post.toString());
 
         req.getRequestDispatcher("/jsp/SipResponse.jsp").forward(req, resp);
     }
