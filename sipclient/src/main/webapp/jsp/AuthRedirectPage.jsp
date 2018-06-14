@@ -1,5 +1,6 @@
 <%@ page import="Common.Constants" %>
 <%@ page import="Common.Configurations" %>
+<%@ page import="static java.lang.String.format" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -62,6 +63,17 @@
                        id="redirectURL" name="redirectURL"
                        value="<%out.println(Constants.getMyContextPath() + Constants.getRedirectEndpoint());%>">
             </div>
+        </div>
+        <div class="form-group">
+            <label for="visualized">Request visualized : </label>
+            <textarea class="form-control" id="visualized"><%
+                out.print(format("code=%s&grant_type=%s&client_id=%s&redirect_url=%s&client_secret=%s",
+                        request.getParameter("code"),
+                        "authorization_code",
+                        Configurations.getTokenEndpointForIdToken(),
+                        Constants.getMyContextPath() + Constants.getRedirectEndpoint(),
+                        Configurations.getClientSecretForIdToken()));
+            %></textarea>
         </div>
         <div class="form-group">
             <div class="col-5">

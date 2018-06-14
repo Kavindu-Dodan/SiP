@@ -21,7 +21,7 @@
 
     <div class=".container-fluid">
         <br>
-        <h4>Token response</h4>
+        <h4>OpenID Connect response</h4>
         <br>
         <textarea class="form-control" id="token"><%out.print(Utils.getTokenResponse());%></textarea>
     </div>

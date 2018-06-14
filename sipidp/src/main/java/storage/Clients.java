@@ -11,15 +11,6 @@ public class Clients {
 
     private static final Map<String, Client> CLIENT_MAP = new HashMap<>();
 
-    static {
-        Client def =
-                new Client(
-                        "MyClient",
-                        "test_client",
-                        "test_client",
-                        "http://localhost:8080/sip-client/redirect");
-        addClient(def);
-    }
 
     private Clients() {
     }

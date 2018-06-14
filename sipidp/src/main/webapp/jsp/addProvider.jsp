@@ -44,7 +44,7 @@
         <div class="form-group">
             <div class="col-5">
                 <label for="discoveryURL">Discovery URL</label>
-                <input type="text" class="form-control" name="discoveryURL" id="discoveryURL" placeholder="Email">
+                <input type="text" class="form-control" name="discoveryURL" id="discoveryURL" placeholder="Discovery URL">
             </div>
         </div>
         <div class="form-group">

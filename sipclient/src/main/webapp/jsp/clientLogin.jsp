@@ -1,5 +1,6 @@
 <%@ page import="Common.Constants" %>
 <%@ page import="Common.Configurations" %>
+<%@ page import="static java.lang.String.format" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -44,6 +45,34 @@
                        id="redirectURL" name="redirectURL"
                        value="<%out.println(Constants.getMyContextPath() + Constants.getRedirectEndpoint());%>">
             </div>
+        </div>
+        <div class="form-group">
+            <div class="col-5">
+                <label for="scope">Scope</label>
+                <input type="text" class="form-control"
+                       id="scope" name="scope"
+                       value="<%out.println("openid identity_share");%>">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-5">
+                <label for="responseType">ResponseType</label>
+                <input type="text" class="form-control"
+                       id="responseType" name="responseType"
+                       value="<%out.println("code");%>">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="visualized">Request visualized : </label>
+            <textarea class="form-control" id="visualized"><%
+                out.print(format(
+                        "%s?client_id=%s&redirect_uri=%s&scope=%s&response_type=%s",
+                        Configurations.getAuthEndpointForIdToken(),
+                        Configurations.getClientIdForIdToken(),
+                        Constants.getMyContextPath() + Constants.getRedirectEndpoint(),
+                        "openid identity_share",
+                        "code"));
+            %></textarea>
         </div>
         <div class="form-group">
             <div class="col-5">

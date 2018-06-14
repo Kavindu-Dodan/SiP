@@ -23,6 +23,5 @@ public class ConfigReceiver extends HttpServlet {
         Configurations.setTokenEndpointForIdSip(req.getParameter("tokenEndpointForSiP"));
 
         resp.sendRedirect("/sip-client/clientLogin");
-
     }
 }

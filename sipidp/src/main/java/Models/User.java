@@ -3,14 +3,13 @@ package Models;
 public class User {
 
     private final String username;
-    private final String password;
 
+    private String password;
     private String email;
     private int age;
 
-    public User(final String username, final String password) {
+    public User(final String username) {
         this.username = username;
-        this.password = password;
     }
 
     public String getUsername() {
@@ -35,5 +34,9 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -25,7 +25,8 @@ public class CreateUser extends HttpServlet {
         final String email = req.getParameter("email");
         final int age = Integer.parseInt(req.getParameter("age"));
 
-        User newUser = new User(username, password);
+        User newUser = new User(username);
+        newUser.setPassword(password);
 
         newUser.setEmail(email);
         newUser.setAge(age);

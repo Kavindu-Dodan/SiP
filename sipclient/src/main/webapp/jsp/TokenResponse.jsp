@@ -1,5 +1,6 @@
 <%@ page import="Common.Constants" %>
 <%@ page import="Common.Configurations" %>
+<%@ page import="static java.lang.String.format" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,9 +19,8 @@
         <br>
         <h2>Token response</h2>
         <br>
-        <textarea class="form-control" id="token">
-            <%out.print(request.getAttribute("tokenResponseJson").toString());%>
-        </textarea>
+        <label for="response">Response as JSON :</label><textarea class="form-control" id="response">
+            <%out.print(request.getAttribute("tokenResponseJson").toString());%></textarea>
     </div>
 
     <div class=".container-fluid">
@@ -67,7 +67,25 @@
                            value="<%out.println(Constants.getMyContextPath() + Constants.getRedirectEndpoint());%>">
                 </div>
             </div>
-
+            <div class="form-group">
+                <div class="col-5">
+                    <label for="grant">Grant Type</label>
+                    <input type="text" class="form-control"
+                           id="grant" name="grant"
+                           value="<%out.println("sip_token");%>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="visualized">Request visualized : </label>
+                <textarea class="form-control" id="visualized"><%
+                    out.print(format("sip_token=%s&grant_type=%s&client_id=%s&redirect_url=%s&client_secret=%s",
+                            "<SIP-TOKEN>",
+                            "sip_token",
+                            Configurations.getClientIdForIdSip(),
+                            Constants.getMyContextPath() + Constants.getRedirectEndpoint(),
+                            Configurations.getClientSecretForIdSip()));
+                %></textarea>
+            </div>
             <div class="form-group">
                 <div class="col-5">
                     <input type="submit" class="btn btn-primary" value="Obtain SIP response">

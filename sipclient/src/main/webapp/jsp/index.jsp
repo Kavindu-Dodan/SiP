@@ -97,7 +97,7 @@
 
         <div class="form-group">
             <div class="col-5">
-                <input type="submit" class="btn btn-primary" value="Save Configurations">
+                <input type="submit" class="btn btn-primary" value="Save Configurations & Proceed to token obtaining">
             </div>
         </div>
     </form>
