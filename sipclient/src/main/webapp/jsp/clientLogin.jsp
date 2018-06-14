@@ -16,7 +16,7 @@
 <div class="container">
     <div class=".container-fluid">
         <br>
-        <h2>Please login to continue</h2>
+        <h2>Create authorization request</h2>
         <br>
     </div>
 

@@ -5,14 +5,11 @@ import Models.Client;
 import storage.Clients;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static java.lang.String.format;
 
 @WebServlet(urlPatterns = "/admin/addClient")
 public class AddClient extends HttpServlet {
