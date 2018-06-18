@@ -165,7 +165,7 @@ public class TokenRequestProcessor {
         final JSONArray issuedToList = (JSONArray) istClaim;
 
         if (!issuedToList.contains(getThisIssuer())) {
-            return createErrorResponse("Token grant cannot be accepted");
+            return createErrorResponse("Token grant cannot be accepted. Issuer not found in registered list");
         }
 
         // Token is issued to us. Now move on to validations
