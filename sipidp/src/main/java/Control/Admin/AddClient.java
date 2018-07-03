@@ -13,7 +13,6 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/admin/addClient")
 public class AddClient extends HttpServlet {
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/jsp/addClient.jsp").forward(req, resp);
@@ -31,5 +30,4 @@ public class AddClient extends HttpServlet {
 
         resp.sendRedirect("/sip-identity-provider/admin/ListClients");
     }
-
 }

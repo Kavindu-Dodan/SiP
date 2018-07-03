@@ -34,7 +34,6 @@ import java.io.IOException;
 public class AuthFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
-
     }
 
     @Override
@@ -58,6 +57,5 @@ public class AuthFilter implements Filter {
 
     @Override
     public void destroy() {
-
     }
 }

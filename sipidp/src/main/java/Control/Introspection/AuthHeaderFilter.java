@@ -21,7 +21,6 @@ import static Common.FwUtils.getCredentialsFromBasicHeader;
 public class AuthHeaderFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override
@@ -30,7 +29,6 @@ public class AuthHeaderFilter implements Filter {
         final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         // Check header for a valid bearer token
         final String authorizationHeader = httpServletRequest.getHeader("Authorization");
-
 
         if (FwUtils.isBasicAuth(authorizationHeader)) {
             try {
@@ -43,7 +41,6 @@ public class AuthHeaderFilter implements Filter {
             } catch (FrameworkCheckedException e) {
                 httpServletResponse.setStatus(401);
             }
-
         } else if (FwUtils.isBearerAuth(authorizationHeader)) {
             try {
                 final String bearerToken = getCredentialFromBearerHeader(authorizationHeader);
@@ -56,12 +53,10 @@ public class AuthHeaderFilter implements Filter {
                 httpServletResponse.setStatus(401);
             }
         }
-
         httpServletResponse.setStatus(401);
     }
 
     @Override
     public void destroy() {
-
     }
 }

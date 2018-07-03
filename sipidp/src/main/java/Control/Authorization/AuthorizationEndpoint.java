@@ -32,11 +32,11 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/authorization", name = "AuthorizationEndpoint")
 public class AuthorizationEndpoint extends HttpServlet {
     @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
+            throws ServletException, IOException {
         if (!AuthRequestProcessor.preValidations(req)) {
             throw new FrameworkUncheckedException("Invalid authorization request");
         }
-
         // Create the Authorization response
         AuthenticationResponse authResponse = AuthRequestProcessor.getAuthResponse(req);
 
@@ -44,6 +44,5 @@ public class AuthorizationEndpoint extends HttpServlet {
             AuthenticationSuccessResponse successResponse = (AuthenticationSuccessResponse) authResponse;
             resp.sendRedirect(successResponse.toURI().toASCIIString());
         }
-
     }
 }

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = "/Consent")
-public class ConsentHandler extends HttpServlet {
+public class ConsentEndpoint extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final String consentGrant = req.getParameter(Constants.getConsentField());
