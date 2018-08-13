@@ -61,7 +61,7 @@
     </form>
 </div>
 
-<script src="/sip-identity-provider/jsp//js/bootstrap.min.js"></script>
+<script src="/sip-identity-provider/jsp/js/bootstrap.min.js"></script>
 
 </body>
 </html>
